@@ -2,7 +2,6 @@
 
 body {
 	margin: 0;
-	font: 300 15px/24px 'Montserrat';
 }
 
 a {
@@ -14,4 +13,9 @@ a {
 	&:hover {
 		opacity: 0.7;
 	}
+}
+
+* {
+	font: 300 15px/24px 'Montserrat';
+	letter-spacing: 0.25px;
 }

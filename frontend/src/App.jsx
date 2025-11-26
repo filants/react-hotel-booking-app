@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
+import { Home, Register, Login } from './pages';
 import { Header } from './components';
-import { Home } from './pages';
 import styled from 'styled-components';
 
 const Content = styled.div`
@@ -14,8 +14,8 @@ export const App = () => {
 			<Content>
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/login" element={<div>Login</div>} />
-					<Route path="/register" element={<div>Register</div>} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/register" element={<Register />} />
 				</Routes>
 			</Content>
 		</>

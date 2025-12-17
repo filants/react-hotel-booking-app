@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const InputContainer = ({ type, name, value, children, className, ...props }) => (
+const InputContainer = ({ type, name, value, children, className, width, ...props }) => (
 	<div className={className}>
 		<label htmlFor={name}>{children}</label>
 		<input type={type} name={name} id={name} value={value} {...props} />
@@ -8,9 +8,11 @@ const InputContainer = ({ type, name, value, children, className, ...props }) =>
 );
 
 export const Input = styled(InputContainer)`
-	margin-top: 15px;
 	display: flex;
 	flex-direction: column;
+	flex: ${({ width }) => (width ? '0 0 auto' : '1 1 0')};
+	width: ${({ width }) => width || 'auto'};
+	min-width: 0;
 	& label {
 		font-style: italic;
 		font-weight: 450;
@@ -29,6 +31,9 @@ export const Input = styled(InputContainer)`
 		&:focus-visible {
 			outline: none;
 			border: 1px solid #d99a29;
+		}
+		&::placeholder {
+			color: #d0d0d0;
 		}
 	}
 `;

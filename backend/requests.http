@@ -1,4 +1,48 @@
-POST http://localhost:3001/register/
+POST http://localhost:3001/api/rooms/create/
+content-type: application/json
+
+{
+  "img": "https://cf.bstatic.com/xdata/images/hotel/max1024x768/673136591.jpg?k=cc8231726510d5386588127c41ad1f0ab59d0077590d35b648eea7ca8e8efa6c&o=",
+  "name": "Junior suite",
+  "category": "suite",
+  "size": "25",
+  "description": "The air-conditioned twin room offers a flat-screen TV, soundproof walls, a tea and coffee maker, heating as well as an inner courtyard view. The unit has 2 beds.",
+  "bathroom": [
+    "Free toiletries",
+    "Toilet",
+    "Bathtub or shower",
+    "Towels",
+    "Hairdryer",
+    "Toilet paper"
+  ],
+  "view": "Inner courtyard view",
+  "facilities": [
+    "Air conditioning",
+    "Linens",
+    "Socket near the bed",
+    "Soundproof",
+    "TV",
+    "Telephone",
+    "Heating",
+    "Flat-screen TV",
+    "Electric kettle",
+    "Wake-up service",
+    "Upper floors accessible by elevator",
+    "Tea/Coffee maker"
+  ],
+  "bookings": [
+    {
+      "user": "692553e4157fc6682d4654da",
+      "adults": 2,
+      "checkIn": "2025-12-16",
+      "checkOut": "2025-12-23"
+    }
+  ]
+}
+
+###
+
+POST http://localhost:3001/auth/register/
 content-type: application/json
 
 {
@@ -8,7 +52,7 @@ content-type: application/json
 
 ###
 
-POST http://localhost:3001/login/
+POST http://localhost:3001/auth/login/
 content-type: application/json
 
 {
@@ -18,5 +62,16 @@ content-type: application/json
 
 ###
 
-POST http://localhost:3001/logout/
+POST http://localhost:3001/auth/logout/
+content-type: application/json
+
+
+###
+
+GET http://localhost:3001/api/room/categories/
+content-type: application/json
+
+###
+
+GET http://localhost:3001/api/rooms?roomCategory=suite&checkIn=2025-01-10&checkOut=2025-01-15
 content-type: application/json

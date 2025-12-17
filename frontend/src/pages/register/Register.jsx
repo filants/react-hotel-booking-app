@@ -118,7 +118,7 @@ const RegisterContainer = ({ className }) => {
 
 	return (
 		<div className={className}>
-			<form action={handleSubmit} noValidate>
+			<form onSubmit={handleSubmit} noValidate>
 				<Title>Sign Up</Title>
 				<Input
 					type="email"
@@ -172,6 +172,9 @@ const RegisterContainer = ({ className }) => {
 export const Register = styled(RegisterContainer)`
 	width: 275px;
 	margin: 0 auto;
+	& label {
+		margin-top: 15px;
+	}
 	& .error,
 	.form-error {
 		font-size: 13px;

@@ -3,3 +3,7 @@ export * from './title/Title';
 export * from './input/Input';
 export * from './button/Button';
 export * from './protected-route/ProtectedRoute';
+export * from './loader/Loader';
+export * from './card/Card';
+export * from './select-fiels/SelectField';
+export * from './search-form/SearchForm';

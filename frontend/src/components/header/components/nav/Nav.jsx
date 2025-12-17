@@ -34,15 +34,18 @@ export const Nav = styled(NavContainer)`
 		padding: 0 10px;
 	}
 	& button {
-		font-weight: 500;
-		color: #525759;
 		border: none;
 		background-color: #fff;
 		cursor: pointer;
 		padding: 0;
+	}
+	& a,
+	button {
+		color: #525759;
+		font-weight: 500;
 		transition: opacity 0.2s ease;
 		&:hover {
-			opacity: 0.5;
+			opacity: 0.7;
 		}
 	}
 `;

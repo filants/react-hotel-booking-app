@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import validator from 'validator';
-import User from '../models/user.js';
+import User from '../models/User.js';
 import { generate, verify } from '../helpers/index.js';
 
 export const createUser = async (email, password) => {

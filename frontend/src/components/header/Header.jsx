@@ -18,8 +18,10 @@ export const Header = styled(HeaderContainer)`
 	align-items: center;
 	justify-content: center;
 	box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
-	position: relative;
-
+	position: sticky;
+	top: 0;
+	width: 100%;
+	background-color: #fff;
 	& svg {
 		margin-top: 10px;
 	}

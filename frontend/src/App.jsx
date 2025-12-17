@@ -1,11 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
-import { Home, Register, Login } from './pages';
+import { Home, Register, Login, Room } from './pages';
 import { Header } from './components';
 import styled from 'styled-components';
 
-const Content = styled.div`
-	padding: 40px;
-`;
+const Content = styled.div``;
 
 export const App = () => {
 	return (
@@ -14,6 +12,7 @@ export const App = () => {
 			<Content>
 				<Routes>
 					<Route path="/" element={<Home />} />
+					<Route path="/:id" element={<Room />} />
 					<Route path="/login" element={<Login />} />
 					<Route path="/register" element={<Register />} />
 				</Routes>

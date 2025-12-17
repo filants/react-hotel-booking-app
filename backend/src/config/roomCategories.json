@@ -1,0 +1,6 @@
+[
+  { "value": "all", "label": "All" },
+  { "value": "guest", "label": "Guest Room" },
+  { "value": "deluxe", "label": "Deluxe Room" },
+  { "value": "suite", "label": "Suite" }
+]

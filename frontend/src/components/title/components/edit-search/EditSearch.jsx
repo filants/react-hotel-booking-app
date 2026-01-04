@@ -1,21 +1,23 @@
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../../../';
+import { formattedDate } from '../../../../helpers';
 import RoomCategoryIcon from './assets/room-category-icon.svg?react';
 import AdultsIcon from './assets/adults-icon.svg?react';
-import CalendarIcon from './assets/calendar-icon.svg?react';
+import CalendarIcon from '../../../../assets/icons/calendar-icon.svg?react';
 import styled from 'styled-components';
 
 const EditSearchContainer = ({
 	className,
-	searchReset,
+	clickEvent,
 	checkIn,
 	checkOut,
 	adults,
 	roomCategory,
 	roomCategories,
+	variant,
+	buttonName = 'Edit',
 }) => {
-	const formatted = (date) => {
-		return date.split('-').reverse().join('/');
-	};
+	const navigate = useNavigate();
 
 	const roomCategoryLabel = (roomCategory, roomCategories) => {
 		const result = roomCategories.find((category) => category.value === roomCategory);
@@ -27,18 +29,29 @@ const EditSearchContainer = ({
 		<div className={className}>
 			<div className="dates">
 				<CalendarIcon width={17} />
-				{formatted(checkIn)} – {formatted(checkOut)}
+				{formattedDate(checkIn)} – {formattedDate(checkOut)}
 			</div>
 			<div className="adults">
 				<AdultsIcon width={15} />
 				{adults} Adults
 			</div>
-			<div className="room-category">
-				<RoomCategoryIcon width={22} />
-				{roomCategoryLabel(roomCategory, roomCategories)}
-			</div>
-			<Button className="secondary" clickEvent={searchReset}>
-				Edit
+
+			{buttonName !== 'Back' && (
+				<div className="room-category">
+					<RoomCategoryIcon width={22} />
+					{roomCategoryLabel(roomCategory, roomCategories)}
+				</div>
+			)}
+
+			<Button
+				className="secondary"
+				clickEvent={
+					variant === 'reservation'
+						? () => navigate('/reservations')
+						: clickEvent
+				}
+			>
+				{buttonName}
 			</Button>
 		</div>
 	);

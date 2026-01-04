@@ -1,11 +1,14 @@
-import { useState } from 'react';
-import { Loader, Card, Title, SearchForm } from '../../components';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Loader, Card, Title, SearchForm, EmptyPageMessage } from '../../components';
 import { useRooms } from '../../hooks/useRooms';
 import { useRoomCategories } from '../../hooks/useRoomCategories';
 import { getDate } from '../../helpers';
 import styled from 'styled-components';
 
 const HomeContainer = ({ className }) => {
+	const location = useLocation();
+	const preset = location.state;
 	const { todayDate, tomorrowDate } = getDate();
 	const { getAvailableRooms, rooms, setRooms, loading } = useRooms();
 	const { roomCategories } = useRoomCategories();
@@ -14,6 +17,18 @@ const HomeContainer = ({ className }) => {
 	const [adults, setAdults] = useState(1);
 	const [kids, setKids] = useState(0);
 	const [roomCategory, setRoomCategory] = useState('all');
+
+	useEffect(() => {
+		if (!preset) return;
+
+		setCheckIn(preset.checkIn);
+		setCheckOut(preset.checkOut);
+		setAdults(preset.adults);
+		setRoomCategory(preset.roomCategory);
+
+		getAvailableRooms(preset.roomCategory, preset.checkIn, preset.checkOut);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [preset]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -45,7 +60,7 @@ const HomeContainer = ({ className }) => {
 				<div className="search-results">
 					<Title
 						edit={true}
-						searchReset={() => setRooms(null)}
+						clickEvent={() => setRooms(null)}
 						checkIn={checkIn}
 						checkOut={checkOut}
 						adults={adults}
@@ -55,11 +70,24 @@ const HomeContainer = ({ className }) => {
 						Available rooms
 					</Title>
 					{!rooms?.length ? (
-						<div>Nonthing available on chosen dates...</div>
+						<EmptyPageMessage>
+							Nonthing available on chosen dates...
+						</EmptyPageMessage>
 					) : (
 						<div className="rooms-container">
 							{rooms.map((room) => (
-								<Card room={room} key={room._id} />
+								<Card
+									key={room._id}
+									room={room}
+									variant="search"
+									searchState={{
+										checkIn,
+										checkOut,
+										adults,
+										roomCategory,
+										roomCategories,
+									}}
+								/>
 							))}
 						</div>
 					)}

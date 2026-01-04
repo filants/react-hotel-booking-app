@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiLogin, apiRegister, apiLogout, apiMe } from '../api';
+import { getErrorMessage } from '../helpers';
 
 const AuthContext = createContext();
 // eslint-disable-next-line react-refresh/only-export-components
@@ -40,10 +41,10 @@ export const AuthProvider = ({ children }) => {
 			setUser(res.data.user);
 
 			if (res.status === 200) {
-				navigate('/');
+				navigate(-1);
 			}
 		} catch (error) {
-			setApiError(error.response?.data?.error || 'Login failed');
+			setApiError(getErrorMessage(error, 'Login failed'));
 		} finally {
 			setAuthLoading(false);
 		}
@@ -61,7 +62,7 @@ export const AuthProvider = ({ children }) => {
 				navigate('/');
 			}
 		} catch (error) {
-			setApiError(error.response?.data?.error || 'Registration failed');
+			setApiError(getErrorMessage(error, 'Registration failed'));
 		} finally {
 			setAuthLoading(false);
 		}
@@ -70,7 +71,6 @@ export const AuthProvider = ({ children }) => {
 	const logout = async () => {
 		await apiLogout();
 		setUser(null);
-		navigate('/login');
 	};
 
 	return (

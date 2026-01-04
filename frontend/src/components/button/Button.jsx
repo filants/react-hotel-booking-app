@@ -3,10 +3,11 @@ import styled from 'styled-components';
 const StyledButton = styled.button`
 	&.primary {
 		background-color: #d99a29;
-		border: none;
+		border: 1px solid #d99a29;
 		color: #fff;
 		&:hover {
 			background-color: rgba(82, 87, 89, 1);
+			border: 1px solid rgba(82, 87, 89, 1);
 		}
 	}
 	&.secondary {
@@ -24,7 +25,7 @@ const StyledButton = styled.button`
 	padding: 4px 0;
 	cursor: pointer;
 	transition:
-		background-color 0.2s ease,
+		all 0.2s ease,
 		opacity 0.2s ease;
 `;
 

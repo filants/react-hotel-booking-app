@@ -5,5 +5,7 @@ export * from './button/Button';
 export * from './protected-route/ProtectedRoute';
 export * from './loader/Loader';
 export * from './card/Card';
-export * from './select-fiels/SelectField';
+export * from './select-field/SelectField';
 export * from './search-form/SearchForm';
+export * from './empty-page-message/EmptyPageMessage';
+export * from './book-button/BookButton';

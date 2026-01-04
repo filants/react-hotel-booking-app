@@ -10,23 +10,23 @@ export const register = async (req, res) => {
     return res
       .status(201)
       .cookie('token', token, { httpOnly: true })
-      .send({ error: null, user: mapUser(user) });
+      .json({ error: null, user: mapUser(user) });
   } catch (error) {
     if (error.code === 11000)
-      return res.status(409).send({ error: 'User already exists' });
+      return res.status(409).json({ error: 'User already exists' });
 
     if (error.message === 'Password is not strong enough')
-      return res.status(400).send({
+      return res.status(400).json({
         error:
           'Password must be at least 8 characters with uppercase, lowercase, number, and symbol',
       });
 
     if (error.name === 'ValidationError') {
       const emailError = error.errors.email?.message;
-      return res.status(400).send({ error: emailError });
+      return res.status(400).json({ error: emailError });
     }
 
-    res.status(400).send({ error: error.message || 'Uknown error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -37,26 +37,31 @@ export const login = async (req, res) => {
     const { user, token } = await loginUser(email, password);
 
     res
-      .status(200)
       .cookie('token', token, { httpOnly: true })
-      .send({ error: null, user: mapUser(user) });
+      .json({ error: null, user: mapUser(user) });
   } catch (error) {
-    res.status(400).send({ error: error.message || 'Uknown error' });
+    if (
+      error.message === 'User not found' ||
+      error.message === 'Password is wrong!'
+    ) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 export const logout = async (req, res) =>
-  res.cookie('token', '', { httpOnly: true }).send({});
+  res.cookie('token', '', { httpOnly: true }).json({});
 
 export const me = async (req, res) => {
   try {
     const token = req.cookies?.token;
-    if (!token) return res.status(401).send({ error: 'Not authenticated' });
+    if (!token) return res.status(401).json({ error: 'Not authenticated' });
 
     const user = await identifyUser(token);
 
-    res.send({ user: { id: user._id, email: user.email } });
+    res.json({ user: { id: user._id, email: user.email } });
   } catch {
-    res.status(401).send({ error: 'Not authenticated' });
+    res.status(401).json({ error: 'Not authenticated' });
   }
 };

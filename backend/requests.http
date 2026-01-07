@@ -2,41 +2,50 @@ POST http://localhost:3001/api/rooms/create/
 content-type: application/json
 
 {
-  "img": "https://cf.bstatic.com/xdata/images/hotel/max1024x768/673136591.jpg?k=cc8231726510d5386588127c41ad1f0ab59d0077590d35b648eea7ca8e8efa6c&o=",
-  "name": "Junior suite",
-  "category": "suite",
-  "size": "25",
-  "description": "The air-conditioned twin room offers a flat-screen TV, soundproof walls, a tea and coffee maker, heating as well as an inner courtyard view. The unit has 2 beds.",
+  "pictures": [ 
+    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-1.jpg",
+    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-2.jpg",
+    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-3.jpg",
+    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-4.jpg",
+    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-5.jpg"
+    ],
+  "name": "Superior King Room with Balcony",
+  "category": "superior",
+  "size": "28",
+  "bed": "1 king bed",
+  "description": "This spacious, air-conditioned room features a balcony with a city view, a flat-screen TV with satellite channels, a seating area, a telephone, a refrigerator, a safety deposit box, ironing facilities and a private bathroom with a shower or a bath tub, a hairdryer and free toiletries.",
   "bathroom": [
     "Free toiletries",
-    "Toilet",
-    "Bathtub or shower",
     "Towels",
+    "Shower",
     "Hairdryer",
-    "Toilet paper"
+    "Bathrobe",
+    "Toilet paper",
+    "Toilet"
   ],
-  "view": "Inner courtyard view",
+  "view": "City view",
   "facilities": [
-    "Air conditioning",
-    "Linens",
-    "Socket near the bed",
-    "Soundproof",
-    "TV",
-    "Telephone",
+    "Balcony",
     "Heating",
+    "Air conditioning",
     "Flat-screen TV",
+    "Safe",
+    "Carpeted",
+    "Linens",
     "Electric kettle",
+    "Socket near the bed",
+    "Outdoor furniture",
+    "Desk",
+    "Cable channels",
+    "Sitting area",
     "Wake-up service",
-    "Upper floors accessible by elevator",
-    "Tea/Coffee maker"
-  ],
-  "bookings": [
-    {
-      "user": "692553e4157fc6682d4654da",
-      "adults": 2,
-      "checkIn": "2025-12-16",
-      "checkOut": "2025-12-23"
-    }
+    "Soundproof",
+    "Wardrobe or closet",
+    "Refrigerator",
+    "Telephone",
+    "Ironing facilities",
+    "Tea/Coffee maker",
+    "Radio"
   ]
 }
 

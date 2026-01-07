@@ -14,7 +14,7 @@ const CardContainer = ({
 	deleting = false,
 }) => (
 	<div className={className}>
-		<img src={room.img} alt={room.name} />
+		<img src={room.pictures[0]} alt={room.name} />
 		<div className="room-name">{room.name}</div>
 		<Button className="primary">
 			<Link
@@ -74,6 +74,7 @@ export const Card = styled(CardContainer)`
 		font-size: 18px;
 		font-weight: 500;
 		z-index: 2;
+		padding-right: 130px;
 	}
 	& button.primary {
 		position: absolute;

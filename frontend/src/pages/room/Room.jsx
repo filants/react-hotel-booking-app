@@ -2,6 +2,11 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useRoom } from '../../hooks/useRoom';
 import { Title, Loader, EmptyPageMessage, BookButton } from '../../components';
 import { useAuth } from '../../contexts/AuthContext';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 import styled from 'styled-components';
 
 const RoomContainer = ({ className }) => {
@@ -41,7 +46,19 @@ const RoomContainer = ({ className }) => {
 			</Title>
 			<div className="room-details">
 				<div className="image">
-					<img alt={`${room.name} photo`} src={room.img} />
+					<Swiper
+						pagination={{ type: 'fraction' }}
+						navigation={true}
+						modules={[Pagination, Navigation]}
+						className="swiper"
+						loop={true}
+					>
+						{room.pictures.map((picture) => (
+							<SwiperSlide key={picture._id}>
+								<img alt={`${room.name} photo`} src={picture} />
+							</SwiperSlide>
+						))}
+					</Swiper>
 				</div>
 				<div className="information">
 					<div className="room-name">
@@ -49,6 +66,12 @@ const RoomContainer = ({ className }) => {
 					</div>
 					<div className="room-size">
 						<h3>Room size: {room.size}&#8239;m&sup2;</h3>
+					</div>
+					<div className="room-bed">
+						<svg viewBox="0 0 128 128" width="25" height="25">
+							<path d="M120 88v8a4 4 0 0 1-8 0v-8H16v8a4 4 0 0 1-8 0v-8a8 8 0 0 1 8-8h96a8 8 0 0 1 8 8zM20 52a4 4 0 0 1 4-4h80a4 4 0 0 1 4 4v8h8v-8a12 12 0 0 0-12-12H24a12 12 0 0 0-12 12v8h8zm40 20a8 8 0 0 0-8-8H20a8 8 0 0 0-8 8v4h48zm16-8a8 8 0 0 0-8 8v4h48v-4a8 8 0 0 0-8-8z"></path>
+						</svg>
+						<h3>{room.bed}</h3>
 					</div>
 					<div className="room-description">{room.description}</div>
 					<div className="room-bathroom">
@@ -107,6 +130,18 @@ export const Room = styled(RoomContainer)`
 				aspect-ratio: 660 / 382;
 				object-fit: cover;
 			}
+			& .swiper {
+				--swiper-navigation-color: #fff;
+				--swiper-navigation-size: 30px;
+				--swiper-navigation-sides-offset: 15px;
+			}
+			& .swiper-pagination {
+				color: #fff;
+				margin-bottom: 5px;
+				& .swiper-pagination-total {
+					opacity: 0.5;
+				}
+			}
 		}
 		& .information {
 			max-width: 660px;
@@ -131,6 +166,17 @@ export const Room = styled(RoomContainer)`
 		row-gap: 3px;
 		& div {
 			break-inside: avoid;
+		}
+	}
+
+	& .room-bed {
+		display: flex;
+		align-items: center;
+		& svg {
+			margin: -3px 7px 0 0;
+		}
+		& h3 {
+			margin: 0;
 		}
 	}
 `;

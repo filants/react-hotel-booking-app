@@ -3,10 +3,11 @@ import Room from '../models/Room.js';
 export const createRoom = async (req, res) => {
   try {
     const {
-      img,
+      pictures,
       name,
       category,
       size,
+      bed,
       description,
       bathroom,
       view,
@@ -15,10 +16,11 @@ export const createRoom = async (req, res) => {
     } = req.body;
 
     const room = await Room.create({
-      img,
+      pictures,
       name,
       category,
       size,
+      bed,
       description,
       bathroom,
       view,
@@ -119,7 +121,7 @@ export const getReservations = async (req, res) => {
       { $match: { 'bookings.user': userId } },
       {
         $project: {
-          img: 1,
+          pictures: 1,
           name: 1,
           category: 1,
           size: 1,

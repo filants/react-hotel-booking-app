@@ -24,10 +24,9 @@ const BookingSchema = new mongoose.Schema({
 });
 
 const RoomSchema = new mongoose.Schema({
-  img: {
-    type: String,
+  pictures: {
+    type: [String],
     required: true,
-    trim: true,
   },
   name: {
     type: String,
@@ -39,6 +38,11 @@ const RoomSchema = new mongoose.Schema({
     required: true,
   },
   size: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  bed: {
     type: String,
     required: true,
     trim: true,
@@ -63,7 +67,6 @@ const RoomSchema = new mongoose.Schema({
   },
   bookings: {
     type: [BookingSchema],
-    required: true,
   },
 });
 

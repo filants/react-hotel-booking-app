@@ -106,6 +106,7 @@ export const SearchForm = styled(SearchFormContainer)`
 		gap: 20px;
 		flex-wrap: nowrap;
 		width: 100%;
+		margin-top: -30px;
 	}
 	& button {
 		margin-top: 30px;

@@ -7,7 +7,7 @@ export const requireAuth = async (req, res, next) => {
 
     const user = await identifyUser(token);
 
-    req.user = { id: user._id, email: user.email };
+    req.user = { id: user._id, email: user.email, role: user.role };
 
     next();
   } catch (error) {

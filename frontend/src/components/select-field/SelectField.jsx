@@ -2,30 +2,33 @@ import Select from 'react-select';
 import styled from 'styled-components';
 
 const SelectFieldContainer = ({
-	name,
+	name = 'category',
 	options,
 	roomCategory,
 	setRoomCategory,
 	width,
 	className,
+	isRequired,
+	error,
 }) => {
 	return (
 		<div className={className}>
 			<label htmlFor={name}>Room category</label>
 			<Select
+				inputId={name}
 				options={options}
-				value={options.find((o) => o.value === roomCategory)}
-				onChange={(selected) => setRoomCategory(selected.value)}
+				value={options.find((o) => o.value === roomCategory) || null}
+				onChange={(selected) => setRoomCategory(selected?.value || '')}
 				placeholder="Select..."
 				styles={{
 					control: (base) => ({
 						...base,
-						borderColor: '#d0d0d0',
+						borderColor: error ? '#d40000' : '#d0d0d0',
 						borderRadius: '4px',
 						minHeight: '32px',
 						height: '32px',
 						boxShadow: 'none',
-						'&:hover': { borderColor: '#d99a29' },
+						'&:hover': { borderColor: error ? '#d40000' : '#d99a29' },
 					}),
 					option: (base, state) => ({
 						...base,
@@ -62,6 +65,15 @@ export const SelectField = styled(SelectFieldContainer)`
 		font-style: italic;
 		font-weight: 450;
 		color: rgba(82, 87, 89, 1);
-		margin-bottom: 5px;
+		margin: 15px 0 5px;
 	}
+	${({ isRequired }) =>
+		isRequired &&
+		`
+		& label::after {
+			content: "*";
+			margin-left: 3px;
+			color: #d40000;
+		}
+	`}
 `;

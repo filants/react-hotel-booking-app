@@ -1,9 +1,30 @@
+import { FormResponse } from '../';
 import styled from 'styled-components';
 
-const InputContainer = ({ type, name, value, children, className, width, ...props }) => (
+const InputContainer = ({
+	type,
+	name,
+	value,
+	children,
+	className,
+	width,
+	istextarea,
+	isRequired,
+	error,
+	...props
+}) => (
 	<div className={className}>
 		<label htmlFor={name}>{children}</label>
-		<input type={type} name={name} id={name} value={value} {...props} />
+		{istextarea ? (
+			<textarea name={name} id={name} value={value} {...props} rows="5"></textarea>
+		) : (
+			<>
+				<input type={type} name={name} id={name} value={value} {...props} />
+				{typeof error === 'string' && (
+					<FormResponse type="error-input">{error}</FormResponse>
+				)}
+			</>
+		)}
 	</div>
 );
 
@@ -17,9 +38,10 @@ export const Input = styled(InputContainer)`
 		font-style: italic;
 		font-weight: 450;
 		color: rgba(82, 87, 89, 1);
-		margin-bottom: 5px;
+		margin: 15px 0 5px;
 	}
-	& input {
+	& input:not([type='file']),
+	textarea {
 		font: 300 15px/24px 'Montserrat';
 		border-radius: 4px;
 		border: 1px solid #d0d0d0;
@@ -36,4 +58,15 @@ export const Input = styled(InputContainer)`
 			color: #d0d0d0;
 		}
 	}
+	${({ isRequired }) =>
+		isRequired &&
+		`
+		& label::after {
+			content: "*";
+			margin-left: 3px;
+			color: #d40000;
+		}
+	`}
+	${({ error }) =>
+		error && `& input:not([type='file']), & textarea {border: 1px solid #d40000;}`}
 `;

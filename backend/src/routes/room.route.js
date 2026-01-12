@@ -8,14 +8,22 @@ import {
   deleteReservation,
 } from '../controllers/index.js';
 import { requireAuth } from '../middleware/requireAuth.js';
+import { requireAdmin } from '../middleware/requireAdmin.js';
+import { uploadRoomPictures } from '../middleware/uploadRooms.js';
 
 const router = express.Router();
 
 router.get('/', getAvailableRooms);
-router.post('/create', createRoom);
+router.post(
+  '/',
+  requireAuth,
+  requireAdmin,
+  uploadRoomPictures.array('pictures', 10),
+  createRoom
+);
 router.get('/reservations', requireAuth, getReservations);
 router.delete('/reservations/:reservationId', requireAuth, deleteReservation);
 router.get('/:id', getRoomDetails);
-router.post('/:id/addBooking', requireAuth, addBooking);
+router.post('/:id', requireAuth, addBooking);
 
 export default router;

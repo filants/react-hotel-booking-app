@@ -3,7 +3,6 @@ import Room from '../models/Room.js';
 export const createRoom = async (req, res) => {
   try {
     const {
-      pictures,
       name,
       category,
       size,
@@ -12,23 +11,55 @@ export const createRoom = async (req, res) => {
       bathroom,
       view,
       facilities,
-      bookings,
     } = req.body;
 
+    if (
+      !name ||
+      !category ||
+      !size ||
+      !bed ||
+      !description ||
+      !view ||
+      !bathroom ||
+      !facilities
+    ) {
+      return res
+        .status(400)
+        .json({ message: 'Please fill in all required fields' });
+    }
+
+    const bathroomArray = JSON.parse(bathroom);
+    const facilitiesArray = JSON.parse(facilities);
+
+    if (!bathroomArray.length || !facilitiesArray.length) {
+      return res.status(400).json({
+        message: 'Bathroom and facilities are required',
+      });
+    }
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        message: 'At least one picture is required',
+      });
+    }
+
+    const pictures = (req.files || []).map(
+      (f) => `/uploads/rooms/${f.filename}`
+    );
+
     const room = await Room.create({
-      pictures,
       name,
       category,
       size,
       bed,
       description,
-      bathroom,
+      bathroom: bathroomArray,
       view,
-      facilities,
-      bookings,
+      facilities: facilitiesArray,
+      pictures,
     });
 
-    res.status(201).json({ error: null, room });
+    res.status(201).json(room);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }

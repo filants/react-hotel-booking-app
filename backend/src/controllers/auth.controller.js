@@ -60,7 +60,7 @@ export const me = async (req, res) => {
 
     const user = await identifyUser(token);
 
-    res.json({ user: { id: user._id, email: user.email } });
+    res.json({ user: { id: user._id, email: user.email, role: user.role } });
   } catch {
     res.status(401).json({ error: 'Not authenticated' });
   }

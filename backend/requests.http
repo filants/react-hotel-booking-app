@@ -1,14 +1,7 @@
-POST http://localhost:3001/api/rooms/create/
+POST http://localhost:3001/api/rooms/
 content-type: application/json
 
 {
-  "pictures": [ 
-    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-1.jpg",
-    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-2.jpg",
-    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-3.jpg",
-    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-4.jpg",
-    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-5.jpg"
-    ],
   "name": "Superior King Room with Balcony",
   "category": "superior",
   "size": "28",
@@ -46,7 +39,14 @@ content-type: application/json
     "Ironing facilities",
     "Tea/Coffee maker",
     "Radio"
-  ]
+  ],
+  "pictures": [ 
+    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-1.jpg",
+    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-2.jpg",
+    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-3.jpg",
+    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-4.jpg",
+    "/uploads/rooms/superior-king-room/courtyard-superior-king-room-5.jpg"
+    ]
 }
 
 ###
@@ -92,7 +92,7 @@ content-type: application/json
 
 ###
 
-POST http://localhost:3001/api/rooms/692e99507474acc9fadf9924/addBooking
+POST http://localhost:3001/api/rooms/692e99507474acc9fadf9924
 content-type: application/json
 
 {

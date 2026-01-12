@@ -8,6 +8,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import styled from 'styled-components';
+import { roles } from '../../constants/roles';
 
 const RoomContainer = ({ className }) => {
 	const params = useParams();
@@ -27,23 +28,28 @@ const RoomContainer = ({ className }) => {
 
 	return (
 		<div className={className}>
-			<Title
-				edit={true}
-				buttonName="Back"
-				clickEvent={() =>
-					navigate('/', {
-						state: { checkIn, checkOut, adults, roomCategory },
-					})
-				}
-				checkIn={checkIn}
-				checkOut={checkOut}
-				adults={adults}
-				roomCategory={roomCategory}
-				roomCategories={roomCategories}
-				variant={variant}
-			>
-				{variant === 'reservation' ? 'Reservation' : 'Room'} details
-			</Title>
+			{user.role === roles.USER ? (
+				<Title
+					edit={true}
+					buttonName="Back"
+					clickEvent={() =>
+						navigate('/', {
+							state: { checkIn, checkOut, adults, roomCategory },
+						})
+					}
+					checkIn={checkIn}
+					checkOut={checkOut}
+					adults={adults}
+					roomCategory={roomCategory}
+					roomCategories={roomCategories}
+					variant={variant}
+				>
+					{variant === 'reservation' ? 'Reservation' : 'Room'} details
+				</Title>
+			) : (
+				<Title>Room details</Title>
+			)}
+
 			<div className="room-details">
 				<div className="image">
 					<Swiper

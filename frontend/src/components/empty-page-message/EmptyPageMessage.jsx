@@ -9,6 +9,11 @@ const StyledDiv = styled.div`
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+	& h1 {
+		font-size: 3em;
+		text-align: center;
+		font-weight: 600;
+	}
 `;
 
 export const EmptyPageMessage = ({ children }) => <StyledDiv>{children}</StyledDiv>;

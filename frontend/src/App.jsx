@@ -1,6 +1,15 @@
 import { Route, Routes } from 'react-router-dom';
-import { Home, Register, Login, Room, Reservations, Occupancy } from './pages';
-import { Header, ProtectedRoute } from './components';
+import {
+	Home,
+	Register,
+	Login,
+	Room,
+	Reservations,
+	Occupancy,
+	AddRoom,
+	Forbidden,
+} from './pages';
+import { AdminRoute, Header, ProtectedRoute } from './components';
 import styled from 'styled-components';
 
 const Content = styled.div``;
@@ -25,12 +34,21 @@ export const App = () => {
 					<Route
 						path="/occupancy"
 						element={
-							<ProtectedRoute>
+							<AdminRoute>
 								<Occupancy />
-							</ProtectedRoute>
+							</AdminRoute>
+						}
+					/>
+					<Route
+						path="/add-room"
+						element={
+							<AdminRoute>
+								<AddRoom />
+							</AdminRoute>
 						}
 					/>
 					<Route path="/rooms/:id" element={<Room />} />
+					<Route path="/403" element={<Forbidden />} />
 				</Routes>
 			</Content>
 		</>

@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 			setUser(res.data.user);
 
 			if (res.status === 200) {
-				navigate(-1);
+				navigate('/reservations');
 			}
 		} catch (error) {
 			setApiError(getErrorMessage(error, 'Login failed'));

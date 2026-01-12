@@ -8,8 +8,14 @@ export const getRooms = async (roomCategory, checkIn, checkOut) =>
 
 export const getRoom = async (id) => axios.get(`${API}/${id}`);
 
+export const createRoom = async (formData) =>
+	axios.post(`${API}`, formData, {
+		withCredentials: true,
+		headers: { 'Content-Type': 'multipart/form-data' },
+	});
+
 export const addBooking = async (id, user, adults, checkIn, checkOut) =>
-	axios.post(`${API}/${id}/addBooking`, { user, adults, checkIn, checkOut });
+	axios.post(`${API}/${id}`, { user, adults, checkIn, checkOut });
 
 export const getReservations = async () => axios.get(`${API}/reservations`);
 

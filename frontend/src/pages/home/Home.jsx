@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Loader, Card, Title, SearchForm, EmptyPageMessage } from '../../components';
+import {
+	Loader,
+	Card,
+	Title,
+	SearchForm,
+	EmptyPageMessage,
+	FullPageContainer,
+} from '../../components';
 import { useRooms } from '../../hooks/useRooms';
 import { useRoomCategories } from '../../hooks/useRoomCategories';
 import { getDate } from '../../helpers';
@@ -57,7 +64,7 @@ const HomeContainer = ({ className }) => {
 					setRoomCategory={setRoomCategory}
 				/>
 			) : (
-				<div className="search-results">
+				<FullPageContainer>
 					<Title
 						edit={true}
 						clickEvent={() => setRooms(null)}
@@ -74,7 +81,7 @@ const HomeContainer = ({ className }) => {
 							Nonthing available on chosen dates...
 						</EmptyPageMessage>
 					) : (
-						<div className="rooms-container">
+						<div className="cards-container">
 							{rooms.map((room) => (
 								<Card
 									key={room._id}
@@ -91,25 +98,10 @@ const HomeContainer = ({ className }) => {
 							))}
 						</div>
 					)}
-				</div>
+				</FullPageContainer>
 			)}
 		</div>
 	);
 };
 
-export const Home = styled(HomeContainer)`
-	& .search-results {
-		padding: 40px;
-	}
-	& .rooms-container {
-		display: grid;
-		gap: 30px;
-		grid-template-columns: repeat(1, 1fr);
-		@media (min-width: 700px) {
-			grid-template-columns: repeat(2, 1fr);
-		}
-		@media (min-width: 1200px) {
-			grid-template-columns: repeat(4, 1fr);
-		}
-	}
-`;
+export const Home = styled(HomeContainer)``;

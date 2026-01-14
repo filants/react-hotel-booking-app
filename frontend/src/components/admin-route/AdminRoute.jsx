@@ -1,9 +1,9 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { Loader } from '..';
 import { useAuth } from '../../contexts/AuthContext';
 import { roles } from '../../constants/roles';
 
-export const AdminRoute = ({ children }) => {
+export const AdminRoute = () => {
 	const { user, loadingUser } = useAuth();
 
 	if (loadingUser) return <Loader />;
@@ -12,5 +12,5 @@ export const AdminRoute = ({ children }) => {
 
 	if (user.role !== roles.ADMIN) return <Navigate to="/403" replace />;
 
-	return children;
+	return <Outlet />;
 };

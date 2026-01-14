@@ -1,6 +1,7 @@
 import { useAuth } from '../../../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { UserPanel } from './components/UserPanel';
 
 const NavContainer = ({ className }) => {
 	const { user, logout, loadingUser } = useAuth();
@@ -10,11 +11,7 @@ const NavContainer = ({ className }) => {
 			{loadingUser ? (
 				<span>Loading...</span>
 			) : user ? (
-				<>
-					<Link to="/reservations">My reservations</Link>
-					<span>|</span>
-					<button onClick={logout}>Exit</button>
-				</>
+				<UserPanel user={user} logout={logout} />
 			) : (
 				<>
 					<Link to="/login">Sign In</Link>

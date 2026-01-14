@@ -8,6 +8,7 @@ import {
 	Occupancy,
 	AddRoom,
 	Forbidden,
+	AdminDashboard,
 } from './pages';
 import { AdminRoute, Header, ProtectedRoute } from './components';
 import styled from 'styled-components';
@@ -31,22 +32,11 @@ export const App = () => {
 							</ProtectedRoute>
 						}
 					/>
-					<Route
-						path="/occupancy"
-						element={
-							<AdminRoute>
-								<Occupancy />
-							</AdminRoute>
-						}
-					/>
-					<Route
-						path="/add-room"
-						element={
-							<AdminRoute>
-								<AddRoom />
-							</AdminRoute>
-						}
-					/>
+					<Route element={<AdminRoute />}>
+						<Route path="/admin" element={<AdminDashboard />} />
+						<Route path="/admin/occupancy" element={<Occupancy />} />
+						<Route path="/admin/add-room" element={<AddRoom />} />
+					</Route>
 					<Route path="/rooms/:id" element={<Room />} />
 					<Route path="/403" element={<Forbidden />} />
 				</Routes>

@@ -22,7 +22,7 @@ const ReservationsContainer = ({ className }) => {
 			{!reservations.length ? (
 				<EmptyPageMessage>No reservations yet...</EmptyPageMessage>
 			) : (
-				<div className="rooms-container">
+				<div className="cards-container">
 					{reservations.map((reservation) => (
 						<Card
 							key={reservation.booking._id}
@@ -39,17 +39,4 @@ const ReservationsContainer = ({ className }) => {
 	);
 };
 
-export const Reservations = styled(ReservationsContainer)`
-	padding: 40px;
-	& .rooms-container {
-		display: grid;
-		gap: 30px;
-		grid-template-columns: repeat(1, 1fr);
-		@media (min-width: 700px) {
-			grid-template-columns: repeat(2, 1fr);
-		}
-		@media (min-width: 1200px) {
-			grid-template-columns: repeat(4, 1fr);
-		}
-	}
-`;
+export const Reservations = styled(ReservationsContainer)``;

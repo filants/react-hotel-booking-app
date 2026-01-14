@@ -8,7 +8,6 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import styled from 'styled-components';
-import { roles } from '../../constants/roles';
 
 const RoomContainer = ({ className }) => {
 	const params = useParams();
@@ -28,7 +27,7 @@ const RoomContainer = ({ className }) => {
 
 	return (
 		<div className={className}>
-			{user.role === roles.USER ? (
+			{state ? (
 				<Title
 					edit={true}
 					buttonName="Back"
@@ -60,7 +59,7 @@ const RoomContainer = ({ className }) => {
 						loop={true}
 					>
 						{room.pictures.map((picture) => (
-							<SwiperSlide key={picture._id}>
+							<SwiperSlide key={picture}>
 								<img alt={`${room.name} photo`} src={picture} />
 							</SwiperSlide>
 						))}
@@ -116,10 +115,6 @@ const RoomContainer = ({ className }) => {
 };
 
 export const Room = styled(RoomContainer)`
-	padding: 40px;
-	@media (max-width: 768px) {
-		padding: 20px;
-	}
 	& .room-details {
 		display: flex;
 		justify-content: center;

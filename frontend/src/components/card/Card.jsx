@@ -41,10 +41,6 @@ const CardContainer = ({
 );
 
 export const Card = styled(CardContainer)`
-	height: 255px;
-	border-radius: 12px;
-	overflow: hidden;
-	box-shadow: 3px 3px 6px rgb(0, 0, 0, 0.2);
 	position: relative;
 	& img {
 		height: 100%;

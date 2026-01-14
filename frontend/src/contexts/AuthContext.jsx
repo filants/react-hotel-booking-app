@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiLogin, apiRegister, apiLogout, apiMe } from '../api';
 import { getErrorMessage } from '../helpers';
+import { roles } from '../constants/roles';
 
 const AuthContext = createContext();
 // eslint-disable-next-line react-refresh/only-export-components
@@ -38,10 +39,15 @@ export const AuthProvider = ({ children }) => {
 
 		try {
 			const res = await apiLogin(email, password);
-			setUser(res.data.user);
 
 			if (res.status === 200) {
-				navigate('/reservations');
+				const user = res.data.user;
+				setUser(user);
+
+				const navigationURL =
+					user.role === roles.ADMIN ? '/admin' : '/reservations';
+
+				navigate(navigationURL);
 			}
 		} catch (error) {
 			setApiError(getErrorMessage(error, 'Login failed'));

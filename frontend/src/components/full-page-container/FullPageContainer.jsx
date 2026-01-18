@@ -16,7 +16,7 @@ const FullPageContainerDiv = styled.div`
 			grid-template-columns: repeat(4, 1fr);
 		}
 		& > div,
-		a {
+		> a {
 			height: 255px;
 			border-radius: 12px;
 			overflow: hidden;

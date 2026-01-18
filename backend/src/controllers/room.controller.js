@@ -1,4 +1,123 @@
 import Room from '../models/Room.js';
+import path from 'path';
+import fs from 'fs';
+
+export const getAvailableRooms = async (req, res) => {
+  try {
+    const { roomCategory, checkIn, checkOut } = req.query;
+
+    const filter = {};
+
+    if (roomCategory && roomCategory !== 'all') {
+      filter.category = roomCategory;
+    }
+
+    const rooms = await Room.find(filter);
+
+    if (!checkIn || !checkOut) {
+      return res.json(rooms);
+    }
+
+    const start = new Date(checkIn);
+    const end = new Date(checkOut);
+
+    const availableRooms = rooms.filter((room) => {
+      if (!room.bookings || room.bookings.length === 0) return true;
+
+      const hasOverlap = room.bookings.some((booking) => {
+        const bookingStart = new Date(booking.checkIn);
+        const bookingEnd = new Date(booking.checkOut);
+
+        return bookingStart < end && start < bookingEnd;
+      });
+
+      return !hasOverlap;
+    });
+
+    res.json(availableRooms);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const updateRoom = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const room = await Room.findById(id);
+    if (!room) return res.status(404).json({ error: 'Room not found' });
+
+    const {
+      name,
+      category,
+      size,
+      bed,
+      description,
+      bathroom,
+      view,
+      facilities,
+      keepPictures,
+    } = req.body;
+
+    if (
+      !name ||
+      !category ||
+      !size ||
+      !bed ||
+      !description ||
+      !view ||
+      !bathroom ||
+      !facilities ||
+      !keepPictures
+    ) {
+      return res
+        .status(400)
+        .json({ message: 'Please fill in all required fields' });
+    }
+
+    const bathroomArray = JSON.parse(bathroom);
+    const facilitiesArray = JSON.parse(facilities);
+    const keep = JSON.parse(keepPictures);
+
+    if (!bathroomArray.length || !facilitiesArray.length) {
+      return res.status(400).json({
+        message: 'Bathroom and facilities are required',
+      });
+    }
+
+    const uploadedFiles = req.files || [];
+    const uploaded = uploadedFiles.map((f) => `/uploads/rooms/${f.filename}`);
+
+    const uploadedNames = new Set(uploadedFiles.map((f) => f.filename));
+
+    const toDelete = (room.pictures || []).filter((url) => !keep.includes(url));
+
+    toDelete.forEach((url) => {
+      const base = path.basename(url);
+      if (uploadedNames.has(base)) return;
+
+      const filePath = path.join(process.cwd(), 'uploads', 'rooms', base);
+      fs.unlink(filePath, () => {});
+    });
+
+    room.name = name;
+    room.category = category;
+    room.size = size;
+    room.bed = bed;
+    room.description = description;
+    room.bathroom = bathroomArray;
+    room.view = view;
+    room.facilities = facilitiesArray;
+
+    room.pictures = [...keep, ...uploaded];
+
+    await room.save();
+
+    res.json(room);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 export const createRoom = async (req, res) => {
   try {
@@ -44,7 +163,7 @@ export const createRoom = async (req, res) => {
     }
 
     const pictures = (req.files || []).map(
-      (f) => `/uploads/rooms/${f.filename}`
+      (f) => `/uploads/rooms/${f.filename}`,
     );
 
     const room = await Room.create({
@@ -60,44 +179,6 @@ export const createRoom = async (req, res) => {
     });
 
     res.status(201).json(room);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
-
-export const getAvailableRooms = async (req, res) => {
-  try {
-    const { roomCategory, checkIn, checkOut } = req.query;
-
-    const filter = {};
-
-    if (roomCategory && roomCategory !== 'all') {
-      filter.category = roomCategory;
-    }
-
-    const rooms = await Room.find(filter);
-
-    if (!checkIn || !checkOut) {
-      return res.status(200).json(rooms);
-    }
-
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
-
-    const availableRooms = rooms.filter((room) => {
-      if (!room.bookings || room.bookings.length === 0) return true;
-
-      const hasOverlap = room.bookings.some((booking) => {
-        const bookingStart = new Date(booking.checkIn);
-        const bookingEnd = new Date(booking.checkOut);
-
-        return bookingStart < end && start < bookingEnd;
-      });
-
-      return !hasOverlap;
-    });
-
-    res.json(availableRooms);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -130,7 +211,7 @@ export const addBooking = async (req, res) => {
       {
         $push: { bookings: { user, adults, checkIn, checkOut } },
       },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!updatedRoom) {
@@ -187,7 +268,7 @@ export const deleteReservation = async (req, res) => {
     const updatedRoom = await Room.findOneAndUpdate(
       { 'bookings._id': reservationId, 'bookings.user': userId },
       { $pull: { bookings: { _id: reservationId, user: userId } } },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedRoom)

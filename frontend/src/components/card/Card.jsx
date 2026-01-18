@@ -12,20 +12,32 @@ const CardContainer = ({
 	reservationState,
 	handleDelete,
 	deleting = false,
+	available,
 }) => (
 	<div className={className}>
 		<img src={room.pictures[0]} alt={room.name} />
+		{variant === 'availability' && (
+			<div className={`room-${available ? 'available' : 'not-available'}`}>
+				{available ? 'Available' : 'Not available'}
+			</div>
+		)}
+		<Link to={`/admin/add-room/${room._id}`}>
+			<button title="Edit room" className="edit"></button>
+		</Link>
 		<div className="room-name">{room.name}</div>
 		<Button className="primary">
 			<Link
 				to={`/rooms/${room._id}`}
-				state={{ ...searchState, ...reservationState, variant }}
+				state={
+					variant ? { ...searchState, ...reservationState, variant } : undefined
+				}
 			>
 				Open
 			</Link>
 		</Button>
 		{handleDelete && (
 			<button
+				title="Delete reservation"
 				className="delete"
 				onClick={() => handleDelete(reservationState._id)}
 				disabled={deleting}
@@ -113,6 +125,26 @@ export const Card = styled(CardContainer)`
 			opacity: 0.5;
 		}
 	}
+	& button.edit {
+		position: absolute;
+		right: 25px;
+		top: 20px;
+		content: '';
+		display: inline-block;
+		width: 40px;
+		height: 40px;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' viewBox='0 0 39 39'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: %23fff; %7D %3C/style%3E%3C/defs%3E%3C!-- Generator: Adobe Illustrator 28.7.3, SVG Export Plug-In . SVG Version: 1.2.0 Build 164) --%3E%3Cg%3E%3Cg id='Layer_1'%3E%3Cg id='Main'%3E%3Cg id='My-reservations'%3E%3Cg id='Trash'%3E%3Ccircle id='Oval' class='cls-1' cx='19.5' cy='19.5' r='19.5'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3Cg%3E%3Cpath d='M12.6,27s0,0,.1,0c.8-.1,1.7-.2,2.5-.3.6,0,1.2-.3,1.6-.8,2.3-2.3,4.7-4.7,7-7,.2-.2.2-.4,0-.6-1.2-1.2-2.3-2.3-3.5-3.5-.2-.2-.4-.2-.6,0-2.3,2.3-4.6,4.6-7,7-.4.4-.7.9-.8,1.5,0,.3,0,.6-.1.9,0,.6-.2,1.2-.2,1.8,0,.5.3.9.9.9ZM24,11.3c-.4,0-.8.1-1.1.5-.5.5-1.1,1.1-1.6,1.6-.2.2-.2.3,0,.5,1.2,1.2,2.4,2.4,3.6,3.6.2.2.3.2.5,0,.5-.5,1.1-1.1,1.6-1.6.6-.7.6-1.6,0-2.3-.6-.6-1.2-1.2-1.8-1.8-.3-.3-.7-.5-1.2-.5ZM23,27c1.2,0,2.5,0,3.7,0,.3,0,.6-.1.7-.4.2-.4-.2-.9-.7-.9-2.4,0-4.7,0-7.1,0-.1,0-.2,0-.4,0-.4,0-.6.3-.6.7,0,.4.3.6.7.6,1.2,0,2.5,0,3.7,0Z'/%3E%3Cpath d='M12.6,27c-.5,0-.9-.4-.9-.9,0-.6.1-1.2.2-1.8,0-.3,0-.6.1-.9,0-.6.3-1.1.8-1.5,2.3-2.3,4.6-4.6,7-7,.2-.2.4-.2.6,0,1.2,1.2,2.3,2.3,3.5,3.5.2.2.2.4,0,.6-2.3,2.3-4.7,4.7-7,7-.4.4-1,.7-1.6.8-.9,0-1.7.2-2.5.3,0,0-.1,0-.1,0Z'/%3E%3Cpath d='M24,11.3c.5,0,.9.2,1.2.5.6.6,1.2,1.2,1.8,1.8.6.7.6,1.6,0,2.3-.5.5-1.1,1.1-1.6,1.6-.2.2-.3.2-.5,0-1.2-1.2-2.4-2.4-3.6-3.6-.2-.2-.2-.3,0-.5.5-.5,1.1-1.1,1.6-1.6.3-.3.7-.4,1.1-.5Z'/%3E%3Cpath d='M23,27c-1.2,0-2.5,0-3.7,0-.4,0-.7-.3-.7-.6,0-.4.3-.7.6-.7.1,0,.2,0,.4,0,2.4,0,4.7,0,7.1,0,.5,0,.8.4.7.9-.1.3-.3.4-.7.4-1.2,0-2.5,0-3.7,0Z'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+		background-repeat: no-repeat no-repeat;
+		background-position: center center;
+		background-size: cover;
+		background-color: initial;
+		border: initial;
+		transition: opacity 0.3s ease;
+		cursor: pointer;
+		&:hover {
+			opacity: 0.5;
+		}
+	}
 	& .reservation-details {
 		position: absolute;
 		z-index: 1;
@@ -125,5 +157,39 @@ export const Card = styled(CardContainer)`
 		& .calendar-icon {
 			margin: 0 7px -0.5px 0;
 		}
+	}
+
+	& .room-available,
+	.room-not-available {
+		position: absolute;
+		left: 25px;
+		top: 20px;
+		font-style: italic;
+		font-size: 0.8em;
+		font-weight: 600;
+		background-color: #ffffffbf;
+		padding: 2px 10px;
+		border-radius: 8px;
+		&::before {
+			content: '';
+			display: inline-block;
+			border-radius: 100%;
+			margin-bottom: -1px;
+			width: 12px;
+			height: 12px;
+			margin-right: 7px;
+			background-color: red;
+			box-shadow: 0 0 3px 0px red;
+		}
+	}
+
+	& .room-available::before {
+		background-color: #23cf23;
+		box-shadow: 0 0 3px 0px #23cf23;
+	}
+
+	& .room-not-available::before {
+		background-color: red;
+		box-shadow: 0 0 3px 0px red;
 	}
 `;

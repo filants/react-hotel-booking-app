@@ -2,6 +2,7 @@ import express from 'express';
 import {
   getAvailableRooms,
   createRoom,
+  updateRoom,
   getReservations,
   getRoomDetails,
   addBooking,
@@ -19,7 +20,14 @@ router.post(
   requireAuth,
   requireAdmin,
   uploadRoomPictures.array('pictures', 10),
-  createRoom
+  createRoom,
+);
+router.put(
+  '/:id',
+  requireAuth,
+  requireAdmin,
+  uploadRoomPictures.array('pictures', 10),
+  updateRoom,
 );
 router.get('/reservations', requireAuth, getReservations);
 router.delete('/reservations/:reservationId', requireAuth, deleteReservation);

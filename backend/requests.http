@@ -1,8 +1,8 @@
-POST http://localhost:3001/api/rooms/
+PUT http://localhost:3001/api/rooms/695e0e982d3d3e8ebd81d6a7
 content-type: application/json
 
 {
-  "name": "Superior King Room with Balcony",
+  "name": "Superior King Room with Balcony - Edited",
   "category": "superior",
   "size": "28",
   "bed": "1 king bed",
@@ -50,7 +50,6 @@ content-type: application/json
 }
 
 ###
-
 POST http://localhost:3001/auth/register/
 content-type: application/json
 
@@ -60,7 +59,6 @@ content-type: application/json
 }
 
 ###
-
 POST http://localhost:3001/auth/login/
 content-type: application/json
 
@@ -70,28 +68,19 @@ content-type: application/json
 }
 
 ###
-
 POST http://localhost:3001/auth/logout/
 content-type: application/json
 
 
 ###
-
 GET http://localhost:3001/api/room/categories/
 content-type: application/json
 
 ###
-
-GET http://localhost:3001/api/rooms?roomCategory=suite&checkIn=2025-01-10&checkOut=2025-01-15
-content-type: application/json
-
-###
-
 GET http://localhost:3001/api/rooms/692e99507474acc9fadf9924
 content-type: application/json
 
 ###
-
 POST http://localhost:3001/api/rooms/692e99507474acc9fadf9924
 content-type: application/json
 
@@ -111,6 +100,14 @@ content-type: application/json
 }
 
 ###
-
 DELETE http://localhost:3001/api/rooms/reservations/694bfd1d25962a9c097eed43
+content-type: application/json
+
+
+###
+GET http://localhost:3001/api/rooms?roomCategory=suite&checkIn=2025-01-10&checkOut=2025-01-15
+content-type: application/json
+
+###
+GET http://localhost:3001/api/rooms/
 content-type: application/json

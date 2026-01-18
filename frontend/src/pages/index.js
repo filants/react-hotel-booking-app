@@ -4,6 +4,6 @@ export * from './login/Login';
 export * from './room/Room';
 export * from './reservations/Reservations';
 export * from './occupancy/Occupancy';
-export * from './add-room/AddRoom';
 export * from './forbidden/Forbidden';
 export * from './admin-dashboard/AdminDashboard';
+export * from './add-room/AddRoom';

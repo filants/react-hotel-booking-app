@@ -1,7 +1,7 @@
 import axios from 'axios';
 const API = 'http://localhost:3001/api/rooms';
 
-export const getRooms = async (roomCategory, checkIn, checkOut) =>
+export const getAvailableRooms = async (roomCategory = 'all', checkIn, checkOut) =>
 	axios.get(
 		`${API}?roomCategory=${roomCategory}&checkIn=${checkIn}&checkOut=${checkOut}`,
 	);
@@ -12,6 +12,11 @@ export const createRoom = async (formData) =>
 	axios.post(`${API}`, formData, {
 		withCredentials: true,
 		headers: { 'Content-Type': 'multipart/form-data' },
+	});
+
+export const updateRoom = async (id, formData) =>
+	axios.put(`${API}/${id}`, formData, {
+		withCredentials: true,
 	});
 
 export const addBooking = async (id, user, adults, checkIn, checkOut) =>

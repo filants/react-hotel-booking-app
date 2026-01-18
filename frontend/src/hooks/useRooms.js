@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getRooms, createRoom as createRoomApi } from '../api';
+import {
+	getAvailableRooms as getAvailableRoomsApi,
+	createRoom as createRoomApi,
+	updateRoom as updateRoomApi,
+} from '../api';
 import { getErrorMessage } from '../helpers';
 
 export const useRooms = () => {
@@ -13,7 +17,7 @@ export const useRooms = () => {
 		setLoading(true);
 
 		try {
-			const res = await getRooms(roomCategory, checkIn, checkOut);
+			const res = await getAvailableRoomsApi(roomCategory, checkIn, checkOut);
 
 			setRooms(res.data);
 		} catch {
@@ -60,5 +64,35 @@ export const useRooms = () => {
 		}
 	};
 
-	return { getAvailableRooms, createRoom, rooms, setRooms, loading, error };
+	const updateRoom = async (id, data, newPictures) => {
+		setLoading(true);
+		setError(null);
+
+		try {
+			const fd = new FormData();
+			fd.append('name', data.name);
+			fd.append('category', data.category);
+			fd.append('size', data.size);
+			fd.append('bed', data.bed);
+			fd.append('description', data.description);
+			fd.append('view', data.view);
+
+			fd.append('bathroom', JSON.stringify(data.bathroomArray));
+			fd.append('facilities', JSON.stringify(data.facilitiesArray));
+
+			fd.append('keepPictures', JSON.stringify(data.keepPictures));
+
+			newPictures.forEach((file) => fd.append('pictures', file));
+
+			const res = await updateRoomApi(id, fd);
+
+			if (res.status === 200) navigate(`/rooms/${id}`);
+		} catch (error) {
+			setError(getErrorMessage(error));
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	return { getAvailableRooms, createRoom, updateRoom, rooms, setRooms, loading, error };
 };

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="8px" height="13px" viewBox="0 0 8 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Fill 1 Copy 2</title>
+    <g id="Main" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Hotel-occupancy---Admin" transform="translate(-1009, -976)" fill="#525759">
+            <g id="Group-3" transform="translate(868, 976)">
+                <path d="M141.265671,11.8843294 C140.911443,11.530102 140.911443,11.0341837 141.265671,10.7508017 L146.012318,6.075 L141.265671,1.47004373 C141.053134,1.18666181 140.982289,0.69074344 141.194825,0.407361516 L141.194825,0.265670554 C141.619898,-0.0885568513 142.115816,-0.0885568513 142.470044,0.265670554 L147.783455,5.50823615 C148.137682,5.86246356 148.137682,6.35838192 147.783455,6.64176385 L142.470044,11.8843294 C142.115816,12.2385569 141.619898,12.2385569 141.265671,11.8843294" id="Fill-1-Copy-2" transform="translate(144.5246, 6.075) scale(-1, 1) rotate(180) translate(-144.5246, -6.075)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

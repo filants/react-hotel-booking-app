@@ -7,6 +7,8 @@ import { getErrorMessage } from '../helpers';
 
 export const useReservations = () => {
 	const [reservations, setReservations] = useState([]);
+	const [page, setPage] = useState(1);
+	const [lastPage, setLastPage] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 
@@ -15,15 +17,16 @@ export const useReservations = () => {
 		setError(null);
 
 		try {
-			const res = await getReservationsApi();
-			setReservations(res.data);
+			const res = await getReservationsApi(page);
+			setReservations(res.data.reservations);
+			setLastPage(res.data.lastPage);
 		} catch (error) {
 			setReservations([]);
 			setError(getErrorMessage(error));
 		} finally {
 			setLoading(false);
 		}
-	}, []);
+	}, [page]);
 
 	useEffect(() => {
 		load();
@@ -45,5 +48,5 @@ export const useReservations = () => {
 		[load],
 	);
 
-	return { reservations, deleteReservation, error, loading };
+	return { reservations, page, setPage, lastPage, deleteReservation, error, loading };
 };

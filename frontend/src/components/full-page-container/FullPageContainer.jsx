@@ -2,6 +2,9 @@ import styled from 'styled-components';
 
 const FullPageContainerDiv = styled.div`
 	padding: 40px;
+	min-height: calc(100vh - 180px);
+	display: flex;
+	flex-direction: column;
 	@media (max-width: 768px) {
 		padding: 20px;
 	}

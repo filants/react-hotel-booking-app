@@ -1,10 +1,14 @@
 import Room from '../models/Room.js';
 import path from 'path';
 import fs from 'fs';
+import { log } from 'console';
 
 export const getAvailableRooms = async (req, res) => {
   try {
-    const { roomCategory, checkIn, checkOut } = req.query;
+    const { roomCategory, checkIn, checkOut, page } = req.query;
+
+    const limit = 8;
+    const pageNum = Math.max(parseInt(page, 10) || 1, 1);
 
     const filter = {};
 
@@ -12,10 +16,19 @@ export const getAvailableRooms = async (req, res) => {
       filter.category = roomCategory;
     }
 
-    const rooms = await Room.find(filter);
+    const [rooms, count] = await Promise.all([
+      Room.find(filter)
+        .limit(limit)
+        .skip((pageNum - 1) * limit)
+        .sort({ name: 1 }),
+      Room.countDocuments(filter),
+    ]);
 
     if (!checkIn || !checkOut) {
-      return res.json(rooms);
+      return res.json({
+        availableRooms: rooms,
+        lastPage: Math.ceil(count / limit),
+      });
     }
 
     const start = new Date(checkIn);
@@ -34,7 +47,10 @@ export const getAvailableRooms = async (req, res) => {
       return !hasOverlap;
     });
 
-    res.json(availableRooms);
+    res.json({
+      availableRooms,
+      lastPage: Math.ceil(availableRooms.length / limit),
+    });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -228,26 +244,44 @@ export const getReservations = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const reservations = await Room.aggregate([
+    const limit = 8;
+    const pageNum = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const skip = (pageNum - 1) * limit;
+
+    const result = await Room.aggregate([
       { $unwind: '$bookings' },
       { $match: { 'bookings.user': userId } },
+      { $sort: { 'bookings.checkIn': 1 } },
+
       {
-        $project: {
-          pictures: 1,
-          name: 1,
-          category: 1,
-          size: 1,
-          description: 1,
-          bathroom: 1,
-          view: 1,
-          facilities: 1,
-          booking: '$bookings',
+        $facet: {
+          data: [
+            { $skip: skip },
+            { $limit: limit },
+            {
+              $project: {
+                pictures: 1,
+                name: 1,
+                category: 1,
+                size: 1,
+                description: 1,
+                bathroom: 1,
+                view: 1,
+                facilities: 1,
+                booking: '$bookings',
+              },
+            },
+          ],
+          meta: [{ $count: 'total' }],
         },
       },
-      { $sort: { 'booking.checkIn': 1 } },
     ]);
 
-    res.json(reservations);
+    const reservations = result[0]?.data ?? [];
+    const total = result[0]?.meta?.[0]?.total ?? 0;
+    const lastPage = Math.max(1, Math.ceil(total / limit));
+
+    res.json({ reservations, lastPage });
   } catch (error) {
     res.status(500).json({ error: 'Could not load reservations' });
   }

@@ -1,10 +1,18 @@
 import { useState } from 'react';
-import { Title, EmptyPageMessage, Loader, Card } from '../../components';
+import {
+	Title,
+	EmptyPageMessage,
+	Loader,
+	Card,
+	FullPageContainer,
+	Pagination,
+} from '../../components';
 import { useReservations } from '../../hooks/useReservations';
 import styled from 'styled-components';
 
 const ReservationsContainer = ({ className }) => {
-	const { reservations, deleteReservation, error, loading } = useReservations();
+	const { reservations, page, lastPage, setPage, deleteReservation, error, loading } =
+		useReservations();
 	const [deletingId, setDeletingId] = useState(null);
 
 	const handleDelete = async (reservationId) => {
@@ -18,23 +26,26 @@ const ReservationsContainer = ({ className }) => {
 
 	return (
 		<div className={className}>
-			<Title>My reservations</Title>
-			{!reservations.length ? (
-				<EmptyPageMessage>No reservations yet...</EmptyPageMessage>
-			) : (
-				<div className="cards-container">
-					{reservations.map((reservation) => (
-						<Card
-							key={reservation.booking._id}
-							room={reservation}
-							reservationState={reservation.booking}
-							variant="reservation"
-							handleDelete={handleDelete}
-							deleting={deletingId === reservation.booking._id}
-						/>
-					))}
-				</div>
-			)}
+			<FullPageContainer>
+				<Title>My reservations</Title>
+				{!reservations.length ? (
+					<EmptyPageMessage>No reservations yet...</EmptyPageMessage>
+				) : (
+					<div className="cards-container">
+						{reservations.map((reservation) => (
+							<Card
+								key={reservation.booking._id}
+								room={reservation}
+								reservationState={reservation.booking}
+								variant="reservation"
+								handleDelete={handleDelete}
+								deleting={deletingId === reservation.booking._id}
+							/>
+						))}
+					</div>
+				)}
+				<Pagination page={page} lastPage={lastPage} setPage={setPage} />
+			</FullPageContainer>
 		</div>
 	);
 };

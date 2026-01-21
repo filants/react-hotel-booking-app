@@ -10,16 +10,27 @@ import { getErrorMessage } from '../helpers';
 export const useRooms = () => {
 	const navigate = useNavigate();
 	const [rooms, setRooms] = useState(null);
+	const [page, setPage] = useState(1);
+	const [lastPage, setLastPage] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 
-	const getAvailableRooms = async (roomCategory, checkIn, checkOut) => {
+	const getAvailableRooms = async ({
+		roomCategory = 'all',
+		checkIn,
+		checkOut,
+		page = 1,
+	} = {}) => {
 		setLoading(true);
-
 		try {
-			const res = await getAvailableRoomsApi(roomCategory, checkIn, checkOut);
-
-			setRooms(res.data);
+			const res = await getAvailableRoomsApi({
+				roomCategory,
+				checkIn,
+				checkOut,
+				page,
+			});
+			setRooms(res.data.availableRooms);
+			setLastPage(res.data.lastPage);
 		} catch {
 			setRooms([]);
 		} finally {
@@ -94,5 +105,16 @@ export const useRooms = () => {
 		}
 	};
 
-	return { getAvailableRooms, createRoom, updateRoom, rooms, setRooms, loading, error };
+	return {
+		getAvailableRooms,
+		createRoom,
+		updateRoom,
+		setRooms,
+		setPage,
+		page,
+		lastPage,
+		rooms,
+		loading,
+		error,
+	};
 };

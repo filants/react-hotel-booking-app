@@ -7,6 +7,7 @@ import {
 	SearchForm,
 	EmptyPageMessage,
 	FullPageContainer,
+	Pagination,
 } from '../../components';
 import { useRooms } from '../../hooks/useRooms';
 import { useRoomCategories } from '../../hooks/useRoomCategories';
@@ -15,15 +16,24 @@ import styled from 'styled-components';
 
 const HomeContainer = ({ className }) => {
 	const location = useLocation();
-	const preset = location.state;
 	const { todayDate, tomorrowDate } = getDate();
-	const { getAvailableRooms, rooms, setRooms, loading } = useRooms();
+	const { getAvailableRooms, rooms, page, lastPage, setPage, setRooms, loading } =
+		useRooms();
 	const { roomCategories } = useRoomCategories();
 	const [checkIn, setCheckIn] = useState(todayDate);
 	const [checkOut, setCheckOut] = useState(tomorrowDate);
 	const [adults, setAdults] = useState(1);
 	const [kids, setKids] = useState(0);
 	const [roomCategory, setRoomCategory] = useState('all');
+
+	const [hasSearched, setHasSearched] = useState(false);
+	const preset = location.state;
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setPage(1);
+		setHasSearched(true);
+	};
 
 	useEffect(() => {
 		if (!preset) return;
@@ -32,18 +42,16 @@ const HomeContainer = ({ className }) => {
 		setCheckOut(preset.checkOut);
 		setAdults(preset.adults);
 		setRoomCategory(preset.roomCategory);
+		setPage(1);
+		setHasSearched(true);
+	}, [preset, setPage]);
 
-		getAvailableRooms(preset.roomCategory, preset.checkIn, preset.checkOut);
+	useEffect(() => {
+		if (!hasSearched) return;
+
+		getAvailableRooms({ roomCategory, checkIn, checkOut, page });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [preset]);
-
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-
-		await getAvailableRooms(roomCategory, checkIn, checkOut);
-	};
-
-	if (loading) return <Loader />;
+	}, [hasSearched, page]);
 
 	return (
 		<div className={className}>
@@ -67,7 +75,11 @@ const HomeContainer = ({ className }) => {
 				<FullPageContainer>
 					<Title
 						edit={true}
-						clickEvent={() => setRooms(null)}
+						clickEvent={() => {
+							setRooms(null);
+							setHasSearched(false);
+							setPage(1);
+						}}
 						checkIn={checkIn}
 						checkOut={checkOut}
 						adults={adults}
@@ -76,11 +88,16 @@ const HomeContainer = ({ className }) => {
 					>
 						Available rooms
 					</Title>
-					{!rooms?.length ? (
+
+					{loading && <Loader />}
+
+					{!loading && !rooms.length && (
 						<EmptyPageMessage>
 							Nonthing available on chosen dates...
 						</EmptyPageMessage>
-					) : (
+					)}
+
+					{!loading && rooms.length > 0 && (
 						<div className="cards-container">
 							{rooms.map((room) => (
 								<Card
@@ -98,6 +115,8 @@ const HomeContainer = ({ className }) => {
 							))}
 						</div>
 					)}
+
+					<Pagination page={page} lastPage={lastPage} setPage={setPage} />
 				</FullPageContainer>
 			)}
 		</div>

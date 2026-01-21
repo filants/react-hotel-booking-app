@@ -17,13 +17,15 @@ const CardContainer = ({
 	<div className={className}>
 		<img src={room.pictures[0]} alt={room.name} />
 		{variant === 'availability' && (
-			<div className={`room-${available ? 'available' : 'not-available'}`}>
-				{available ? 'Available' : 'Not available'}
-			</div>
+			<>
+				<div className={`room-${available ? 'available' : 'not-available'}`}>
+					{available ? 'Available' : 'Not available'}
+				</div>
+				<Link to={`/admin/add-room/${room._id}`}>
+					<button title="Edit room" className="edit"></button>
+				</Link>
+			</>
 		)}
-		<Link to={`/admin/add-room/${room._id}`}>
-			<button title="Edit room" className="edit"></button>
-		</Link>
 		<div className="room-name">{room.name}</div>
 		<Button className="primary">
 			<Link

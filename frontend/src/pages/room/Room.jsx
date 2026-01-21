@@ -109,7 +109,7 @@ const RoomContainer = ({ className }) => {
 								))}
 							</div>
 						</div>
-						{variant === 'search' && user.role !== roles.ADMIN && (
+						{variant === 'search' && user?.role !== roles.ADMIN && (
 							<BookButton
 								user={user}
 								handleBook={handleBook}

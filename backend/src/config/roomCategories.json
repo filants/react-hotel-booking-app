@@ -3,6 +3,7 @@
   { "value": "deluxe", "label": "Deluxe" },
   { "value": "executive", "label": "Executive" },
   { "value": "junior", "label": "Junior" },
+  { "value": "twin", "label": "Twin" },
   { "value": "suite", "label": "Suite" },
   { "value": "superior", "label": "Superior" }
 ]

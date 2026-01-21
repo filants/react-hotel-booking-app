@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
-import { Title, FullPageContainer, Card } from '../../components';
+import { Title, FullPageContainer, Card, Pagination } from '../../components';
 import { useRooms } from '../../hooks/useRooms';
 import { formattedDate } from '../../helpers';
 
 export const Occupancy = () => {
-	const { getAvailableRooms, rooms } = useRooms();
+	const { getAvailableRooms, setPage, page, lastPage, rooms } = useRooms();
 
 	useEffect(() => {
-		getAvailableRooms();
+		getAvailableRooms({ page });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [page]);
 
 	const isAvailable = (bookings) => {
 		const hasOverlap = bookings.some((booking) => {
@@ -36,6 +36,7 @@ export const Occupancy = () => {
 					/>
 				))}
 			</div>
+			<Pagination page={page} lastPage={lastPage} setPage={setPage} />
 		</FullPageContainer>
 	);
 };

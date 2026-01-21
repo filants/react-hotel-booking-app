@@ -13,3 +13,4 @@ export * from './form-response/FormResponse';
 export * from './admin-route/AdminRoute';
 export * from './full-page-container/FullPageContainer';
 export * from './panel-card/PanelCard';
+export * from './pagination/Pagination';

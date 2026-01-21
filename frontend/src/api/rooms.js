@@ -1,10 +1,21 @@
 import axios from 'axios';
 const API = 'http://localhost:3001/api/rooms';
 
-export const getAvailableRooms = async (roomCategory = 'all', checkIn, checkOut) =>
-	axios.get(
-		`${API}?roomCategory=${roomCategory}&checkIn=${checkIn}&checkOut=${checkOut}`,
-	);
+export const getAvailableRooms = ({
+	roomCategory = 'all',
+	checkIn,
+	checkOut,
+	page = 1,
+} = {}) => {
+	const params = new URLSearchParams();
+
+	params.set('roomCategory', roomCategory);
+	if (checkIn) params.set('checkIn', checkIn);
+	if (checkOut) params.set('checkOut', checkOut);
+	params.set('page', String(page));
+
+	return axios.get(`${API}?${params.toString()}`);
+};
 
 export const getRoom = async (id) => axios.get(`${API}/${id}`);
 
@@ -22,7 +33,8 @@ export const updateRoom = async (id, formData) =>
 export const addBooking = async (id, user, adults, checkIn, checkOut) =>
 	axios.post(`${API}/${id}`, { user, adults, checkIn, checkOut });
 
-export const getReservations = async () => axios.get(`${API}/reservations`);
+export const getReservations = async (page = 1) =>
+	axios.get(`${API}/reservations?page=${page}`);
 
 export const deleteReservation = async (reservationId) =>
 	axios.delete(`${API}/reservations/${reservationId}`, {

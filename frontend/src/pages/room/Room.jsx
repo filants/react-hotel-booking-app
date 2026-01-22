@@ -54,7 +54,7 @@ const RoomContainer = ({ className }) => {
 						{variant === 'reservation' ? 'Reservation' : 'Room'} details
 					</Title>
 				) : (
-					<Title>Room details</Title>
+					<Title variant={variant}>Room details</Title>
 				)}
 
 				<div className="room-details">

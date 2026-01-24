@@ -10,12 +10,13 @@ import {
 	SelectField,
 	FormResponse,
 	FullPageContainer,
+	Loader,
 } from '../../components';
 import styled from 'styled-components';
 
 const AddRoomContainer = ({ className }) => {
 	const params = useParams();
-	const { room } = useRoom(params.id);
+	const { room, loading: roomDataLoading } = useRoom(params.id);
 	const { createRoom, updateRoom, loading, error: apiError } = useRooms();
 	const { roomCategories } = useRoomCategories();
 	const [name, setName] = useState('');
@@ -136,6 +137,8 @@ const AddRoomContainer = ({ className }) => {
 	useEffect(() => {
 		if (formError) window.scrollTo({ top: 0, behavior: 'smooth' });
 	}, [formError]);
+
+	if (params.id && roomDataLoading) return <Loader />;
 
 	return (
 		<div className={className}>

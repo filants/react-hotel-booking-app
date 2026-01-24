@@ -24,9 +24,11 @@ const NavContainer = ({ className }) => {
 };
 
 export const Nav = styled(NavContainer)`
-	position: absolute;
-	right: 50px;
-	bottom: 25px;
+	@media (min-width: 769px) {
+		position: absolute;
+		right: 50px;
+		bottom: 25px;
+	}
 	& span {
 		padding: 0 10px;
 	}

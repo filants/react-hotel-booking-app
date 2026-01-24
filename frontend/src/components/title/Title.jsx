@@ -29,6 +29,13 @@ export const Title = styled(TitleContainer)`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	@media (max-width: 768px) {
+		align-items: flex-start;
+		flex-direction: column;
+		padding-bottom: 30px;
+		row-gap: 10px;
+	}
+
 	& h1 {
 		font: 600 22px/26px 'Montserrat';
 		letter-spacing: 0.35px;

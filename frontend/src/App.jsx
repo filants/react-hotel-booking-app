@@ -6,12 +6,13 @@ import {
 	Room,
 	Reservations,
 	Occupancy,
-	Forbidden,
+	Error,
 	AdminDashboard,
 	AddRoom,
 } from './pages';
-import { AdminRoute, Header, ProtectedRoute } from './components';
+import { AdminRoute, EmptyPageMessage, Header, ProtectedRoute } from './components';
 import styled from 'styled-components';
+import { errors } from './constants/errors';
 
 const Content = styled.div``;
 
@@ -39,7 +40,8 @@ export const App = () => {
 						<Route path="/admin/add-room/:id" element={<AddRoom />} />
 					</Route>
 					<Route path="/rooms/:id" element={<Room />} />
-					<Route path="/403" element={<Forbidden />} />
+					<Route path="/403" element={<Error error={errors[403]} />} />
+					<Route path="*" element={<Error error={errors[404]} />} />
 				</Routes>
 			</Content>
 		</>

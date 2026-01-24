@@ -1,8 +1,8 @@
 import { EmptyPageMessage } from '../../components';
 
-export const Forbidden = () => (
+export const Error = ({ error }) => (
 	<EmptyPageMessage>
-		<h1>403</h1>
-		<>You don’t have access to this area</>
+		<h1>{error.code}</h1>
+		<>{error.message}</>
 	</EmptyPageMessage>
 );

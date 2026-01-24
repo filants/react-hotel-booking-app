@@ -22,7 +22,7 @@ const RoomContainer = ({ className }) => {
 	const { user } = useAuth();
 	const { addBooking, room, loading, error } = useRoom(params.id);
 	const { state } = useLocation();
-	const { checkIn, checkOut, adults, roomCategory, roomCategories, variant } =
+	const { checkIn, checkOut, adults, roomCategory, roomCategoryLabel, variant } =
 		state || {};
 
 	const handleBook = async () => {
@@ -48,7 +48,7 @@ const RoomContainer = ({ className }) => {
 						checkOut={checkOut}
 						adults={adults}
 						roomCategory={roomCategory}
-						roomCategories={roomCategories}
+						roomCategoryLabel={roomCategoryLabel}
 						variant={variant}
 					>
 						{variant === 'reservation' ? 'Reservation' : 'Room'} details

@@ -23,7 +23,22 @@ export const Header = styled(HeaderContainer)`
 	width: 100%;
 	background-color: #fff;
 	z-index: 10;
+	@media (max-width: 769px) {
+		height: 70px;
+		justify-content: space-between;
+		& svg {
+			width: 150px;
+			margin-left: 20px;
+		}
+		& nav {
+			margin-right: 20px;
+		}
+	}
 	& svg {
 		margin-top: 10px;
+		transition: opacity 0.2s ease;
+		&:hover {
+			opacity: 0.7;
+		}
 	}
 `;

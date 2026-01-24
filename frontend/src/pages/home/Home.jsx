@@ -16,46 +16,59 @@ import styled from 'styled-components';
 
 const HomeContainer = ({ className }) => {
 	const location = useLocation();
+	const preset = location.state;
+
 	const { todayDate, tomorrowDate } = getDate();
 	const { getAvailableRooms, rooms, page, lastPage, setPage, setRooms, loading } =
 		useRooms();
 	const { roomCategories } = useRoomCategories();
+
 	const [checkIn, setCheckIn] = useState(todayDate);
 	const [checkOut, setCheckOut] = useState(tomorrowDate);
 	const [adults, setAdults] = useState(1);
 	const [kids, setKids] = useState(0);
 	const [roomCategory, setRoomCategory] = useState('all');
 
-	const [hasSearched, setHasSearched] = useState(false);
-	const preset = location.state;
-
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		setPage(1);
-		setHasSearched(true);
-	};
-
 	useEffect(() => {
 		if (!preset) return;
 
+		setRooms([]);
 		setCheckIn(preset.checkIn);
 		setCheckOut(preset.checkOut);
 		setAdults(preset.adults);
 		setRoomCategory(preset.roomCategory);
 		setPage(1);
-		setHasSearched(true);
-	}, [preset, setPage]);
+		getAvailableRooms({
+			roomCategory: preset.roomCategory,
+			checkIn: preset.checkIn,
+			checkOut: preset.checkOut,
+			page: 1,
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [preset, setRooms, setPage]);
 
 	useEffect(() => {
-		if (!hasSearched) return;
+		if (rooms === null) return;
 
 		getAvailableRooms({ roomCategory, checkIn, checkOut, page });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [hasSearched, page]);
+	}, [page]);
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setRooms([]);
+		setPage(1);
+		await getAvailableRooms({ roomCategory, checkIn, checkOut, page: 1 });
+	};
+
+	const roomsList = rooms ?? [];
+
+	const selected = roomCategories?.find((o) => o.value === roomCategory);
+	const roomCategoryLabel = selected?.label || roomCategory;
 
 	return (
 		<div className={className}>
-			{!rooms ? (
+			{rooms === null ? (
 				<SearchForm
 					handleSubmit={handleSubmit}
 					checkIn={checkIn}
@@ -76,30 +89,29 @@ const HomeContainer = ({ className }) => {
 					<Title
 						edit={true}
 						clickEvent={() => {
-							setRooms(null);
-							setHasSearched(false);
+							setRooms(null); // back to search screen
 							setPage(1);
 						}}
 						checkIn={checkIn}
 						checkOut={checkOut}
 						adults={adults}
 						roomCategory={roomCategory}
-						roomCategories={roomCategories}
+						roomCategoryLabel={roomCategoryLabel}
 					>
 						Available rooms
 					</Title>
 
 					{loading && <Loader />}
 
-					{!loading && !rooms.length && (
+					{!loading && roomsList.length === 0 && (
 						<EmptyPageMessage>
 							Nonthing available on chosen dates...
 						</EmptyPageMessage>
 					)}
 
-					{!loading && rooms.length > 0 && (
+					{!loading && roomsList.length > 0 && (
 						<div className="cards-container">
-							{rooms.map((room) => (
+							{roomsList.map((room) => (
 								<Card
 									key={room._id}
 									room={room}
@@ -109,7 +121,6 @@ const HomeContainer = ({ className }) => {
 										checkOut,
 										adults,
 										roomCategory,
-										roomCategories,
 									}}
 								/>
 							))}

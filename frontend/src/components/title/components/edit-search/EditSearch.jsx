@@ -12,18 +12,11 @@ const EditSearchContainer = ({
 	checkIn,
 	checkOut,
 	adults,
-	roomCategory,
-	roomCategories,
+	roomCategoryLabel,
 	variant,
 	buttonName = 'Edit',
 }) => {
 	const navigate = useNavigate();
-
-	const roomCategoryLabel = (roomCategory, roomCategories) => {
-		const result = roomCategories.find((category) => category.value === roomCategory);
-
-		return result.label;
-	};
 
 	return (
 		<div className={className}>
@@ -39,7 +32,7 @@ const EditSearchContainer = ({
 			{buttonName !== 'Back' && (
 				<div className="room-category">
 					<RoomCategoryIcon width={22} />
-					{roomCategoryLabel(roomCategory, roomCategories)}
+					{roomCategoryLabel}
 				</div>
 			)}
 
@@ -61,6 +54,11 @@ export const EditSearch = styled(EditSearchContainer)`
 	display: flex;
 	align-items: baseline;
 	gap: 20px;
+	@media (max-width: 768px) {
+		position: relative;
+		width: 100%;
+		flex-direction: column;
+	}
 	& div {
 		white-space: nowrap;
 		font: 600 16px / 20px 'Montserrat';
@@ -68,6 +66,11 @@ export const EditSearch = styled(EditSearchContainer)`
 	& button.secondary {
 		padding-left: 25px;
 		padding-right: 25px;
+		@media (max-width: 768px) {
+			position: absolute;
+			bottom: -7px;
+			right: 0;
+		}
 	}
 
 	& .room-category,

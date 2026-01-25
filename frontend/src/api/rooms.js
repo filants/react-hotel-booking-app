@@ -1,5 +1,5 @@
-import axios from 'axios';
-const API = 'http://localhost:3001/api/rooms';
+import api from './client';
+const API = '/api/rooms';
 
 export const getAvailableRooms = ({
 	roomCategory = 'all',
@@ -14,29 +14,23 @@ export const getAvailableRooms = ({
 	if (checkOut) params.set('checkOut', checkOut);
 	params.set('page', String(page));
 
-	return axios.get(`${API}?${params.toString()}`);
+	return api.get(`${API}?${params.toString()}`);
 };
 
-export const getRoom = async (id) => axios.get(`${API}/${id}`);
+export const getRoom = async (id) => api.get(`${API}/${id}`);
 
 export const createRoom = async (formData) =>
-	axios.post(`${API}`, formData, {
-		withCredentials: true,
+	api.post(`${API}`, formData, {
 		headers: { 'Content-Type': 'multipart/form-data' },
 	});
 
-export const updateRoom = async (id, formData) =>
-	axios.put(`${API}/${id}`, formData, {
-		withCredentials: true,
-	});
+export const updateRoom = async (id, formData) => api.put(`${API}/${id}`, formData);
 
 export const addBooking = async (id, user, adults, checkIn, checkOut) =>
-	axios.post(`${API}/${id}`, { user, adults, checkIn, checkOut });
+	api.post(`${API}/${id}`, { user, adults, checkIn, checkOut });
 
 export const getReservations = async (page = 1) =>
-	axios.get(`${API}/reservations?page=${page}`);
+	api.get(`${API}/reservations?page=${page}`);
 
 export const deleteReservation = async (reservationId) =>
-	axios.delete(`${API}/reservations/${reservationId}`, {
-		withCredentials: true,
-	});
+	api.delete(`${API}/reservations/${reservationId}`);

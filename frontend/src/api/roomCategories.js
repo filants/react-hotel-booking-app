@@ -1,4 +1,3 @@
-import axios from 'axios';
-const API = 'http://localhost:3001/api/room-categories';
+import api from './client';
 
-export const getRoomCategories = () => axios.get(API);
+export const getRoomCategories = () => api.get('/api/room-categories');

@@ -1,10 +1,20 @@
 import { useEffect } from 'react';
-import { Title, FullPageContainer, Card, Pagination } from '../../components';
+import {
+	Title,
+	FullPageContainer,
+	Card,
+	Pagination,
+	Loader,
+	EmptyPageMessage,
+} from '../../components';
 import { useRooms } from '../../hooks/useRooms';
 import { formattedDate } from '../../helpers';
 
 export const Occupancy = () => {
-	const { getAvailableRooms, setPage, page, lastPage, rooms } = useRooms();
+	const { getAvailableRooms, loading, setPage, page, lastPage, rooms, error } =
+		useRooms();
+
+	const roomsArray = Array.isArray(rooms) ? rooms : [];
 
 	useEffect(() => {
 		getAvailableRooms({ page });
@@ -23,19 +33,26 @@ export const Occupancy = () => {
 		return !hasOverlap;
 	};
 
+	if (error) return <EmptyPageMessage>{error}</EmptyPageMessage>;
+
 	return (
 		<FullPageContainer>
 			<Title>Hotel occupancy – {formattedDate(new Date())}</Title>
-			<div className="cards-container">
-				{rooms?.map((room) => (
-					<Card
-						key={room._id}
-						room={room}
-						available={isAvailable(room.bookings)}
-						variant="availability"
-					/>
-				))}
-			</div>
+
+			{loading && <Loader />}
+
+			{!loading && roomsArray.length > 0 && (
+				<div className="cards-container">
+					{roomsArray.map((room) => (
+						<Card
+							key={room._id}
+							room={room}
+							available={isAvailable(room.bookings)}
+							variant="availability"
+						/>
+					))}
+				</div>
+			)}
 			<Pagination page={page} lastPage={lastPage} setPage={setPage} />
 		</FullPageContainer>
 	);

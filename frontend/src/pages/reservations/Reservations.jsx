@@ -21,16 +21,20 @@ const ReservationsContainer = ({ className }) => {
 		setDeletingId(null);
 	};
 
-	if (loading) return <Loader />;
 	if (error) return <EmptyPageMessage>{error}</EmptyPageMessage>;
 
 	return (
 		<div className={className}>
 			<FullPageContainer>
 				<Title>My reservations</Title>
-				{!reservations.length ? (
+
+				{loading && <Loader />}
+
+				{!loading && reservations.length === 0 && (
 					<EmptyPageMessage>No reservations yet...</EmptyPageMessage>
-				) : (
+				)}
+
+				{!loading && reservations.length > 0 && (
 					<div className="cards-container">
 						{reservations.map((reservation) => (
 							<Card

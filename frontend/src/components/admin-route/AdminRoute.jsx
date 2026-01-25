@@ -1,12 +1,11 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { Loader } from '..';
 import { useAuth } from '../../contexts/AuthContext';
 import { roles } from '../../constants/roles';
 
 export const AdminRoute = () => {
 	const { user, loadingUser } = useAuth();
 
-	if (loadingUser) return <Loader />;
+	if (loadingUser) return null;
 
 	if (!user) return <Navigate to="/login" replace />;
 

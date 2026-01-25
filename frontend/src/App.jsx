@@ -25,14 +25,9 @@ export const App = () => {
 					<Route path="/" element={<Home />} />
 					<Route path="/login" element={<Login />} />
 					<Route path="/register" element={<Register />} />
-					<Route
-						path="/reservations"
-						element={
-							<ProtectedRoute>
-								<Reservations />
-							</ProtectedRoute>
-						}
-					/>
+					<Route element={<ProtectedRoute />}>
+						<Route path="/reservations" element={<Reservations />} />
+					</Route>
 					<Route element={<AdminRoute />}>
 						<Route path="/admin" element={<AdminDashboard />} />
 						<Route path="/admin/occupancy" element={<Occupancy />} />

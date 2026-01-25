@@ -29,7 +29,9 @@ export const useReservations = () => {
 	}, [page]);
 
 	useEffect(() => {
+		console.log('Reservations mounted');
 		load();
+		return () => console.log('Reservations unmounted');
 	}, [load]);
 
 	const deleteReservation = useCallback(

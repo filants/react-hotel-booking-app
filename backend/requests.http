@@ -63,8 +63,8 @@ POST http://localhost:3001/auth/login/
 content-type: application/json
 
 {
-    "email": "antons.filipovs@gmail.com",
-    "password": "Filant.504120"
+    "email": "admin@email.com",
+    "password": "Admin.123"
 }
 
 ###

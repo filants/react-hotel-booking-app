@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import validator from 'validator';
 import { useAuth } from '../../contexts/AuthContext';
-import { Title, Input, Button } from '../../components';
+import { Title, Input, Button, FormResponse } from '../../components';
 import styled from 'styled-components';
 
 const RegisterContainer = ({ className }) => {

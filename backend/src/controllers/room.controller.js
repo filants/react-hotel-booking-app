@@ -1,7 +1,6 @@
 import Room from '../models/Room.js';
 import path from 'path';
 import fs from 'fs';
-import { log } from 'console';
 
 export const getAvailableRooms = async (req, res) => {
   try {
@@ -9,6 +8,7 @@ export const getAvailableRooms = async (req, res) => {
 
     const limit = 8;
     const pageNum = Math.max(parseInt(page, 10) || 1, 1);
+    const skip = (pageNum - 1) * limit;
 
     const filter = {};
 
@@ -16,40 +16,36 @@ export const getAvailableRooms = async (req, res) => {
       filter.category = roomCategory;
     }
 
-    const [rooms, count] = await Promise.all([
-      Room.find(filter)
-        .limit(limit)
-        .skip((pageNum - 1) * limit)
-        .sort({ name: 1 }),
+    if (checkIn && checkOut) {
+      const start = new Date(checkIn);
+      const end = new Date(checkOut);
+
+      if (
+        Number.isNaN(start.getTime()) ||
+        Number.isNaN(end.getTime()) ||
+        start >= end
+      ) {
+        return res.status(400).json({ error: 'Invalid checkIn/checkOut' });
+      }
+
+      filter.bookings = {
+        $not: {
+          $elemMatch: {
+            checkIn: { $lt: end },
+            checkOut: { $gt: start },
+          },
+        },
+      };
+    }
+
+    const [availableRooms, count] = await Promise.all([
+      Room.find(filter).sort({ name: 1 }).skip(skip).limit(limit),
       Room.countDocuments(filter),
     ]);
 
-    if (!checkIn || !checkOut) {
-      return res.json({
-        availableRooms: rooms,
-        lastPage: Math.ceil(count / limit),
-      });
-    }
-
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
-
-    const availableRooms = rooms.filter((room) => {
-      if (!room.bookings || room.bookings.length === 0) return true;
-
-      const hasOverlap = room.bookings.some((booking) => {
-        const bookingStart = new Date(booking.checkIn);
-        const bookingEnd = new Date(booking.checkOut);
-
-        return bookingStart < end && start < bookingEnd;
-      });
-
-      return !hasOverlap;
-    });
-
     res.json({
       availableRooms,
-      lastPage: Math.ceil(availableRooms.length / limit),
+      lastPage: Math.max(Math.ceil(count / limit), 1),
     });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });

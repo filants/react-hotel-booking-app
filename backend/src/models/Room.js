@@ -70,4 +70,11 @@ const RoomSchema = new mongoose.Schema({
   },
 });
 
+RoomSchema.index({ category: 1 });
+
+RoomSchema.index({
+  'bookings.checkIn': 1,
+  'bookings.checkOut': 1,
+});
+
 export default mongoose.model('Room', RoomSchema);

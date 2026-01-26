@@ -1,6 +1,15 @@
 import { createUser, loginUser, identifyUser } from '../services/index.js';
 import { mapUser } from '../helpers/index.js';
 
+const isProd = process.env.NODE_ENV === 'production';
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: isProd,
+  sameSite: isProd ? 'none' : 'lax',
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
+
 export const register = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -9,7 +18,7 @@ export const register = async (req, res) => {
 
     return res
       .status(201)
-      .cookie('token', token, { httpOnly: true })
+      .cookie('token', token, cookieOptions)
       .json({ error: null, user: mapUser(user) });
   } catch (error) {
     if (error.code === 11000)
@@ -37,7 +46,7 @@ export const login = async (req, res) => {
     const { user, token } = await loginUser(email, password);
 
     res
-      .cookie('token', token, { httpOnly: true })
+      .cookie('token', token, cookieOptions)
       .json({ error: null, user: mapUser(user) });
   } catch (error) {
     if (
@@ -50,8 +59,9 @@ export const login = async (req, res) => {
   }
 };
 
-export const logout = async (req, res) =>
-  res.cookie('token', '', { httpOnly: true }).json({});
+export const logout = (req, res) => {
+  return res.clearCookie('token', cookieOptions).json({});
+};
 
 export const me = async (req, res) => {
   try {

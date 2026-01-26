@@ -6,8 +6,6 @@ import { fileURLToPath } from 'url';
 import authRoute from './routes/auth.route.js';
 import roomRoute from './routes/room.route.js';
 import roomCategoryRoute from './routes/roomCategory.route.js';
-import dotenv from 'dotenv';
-dotenv.config();
 
 const app = express();
 

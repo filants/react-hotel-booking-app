@@ -12,10 +12,9 @@ fs.mkdirSync(roomsUploadDir, { recursive: true });
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, roomsUploadDir),
   filename: (req, file, cb) => {
-    const safeName = file.originalname
-      .toLowerCase()
-      .replace(/[^a-z0-9.\-_]/g, '-');
-    cb(null, safeName);
+    const ext = path.extname(file.originalname).toLowerCase();
+    const base = path.basename(file.originalname, ext).replace(/\s+/g, '-');
+    cb(null, `${Date.now()}-${base}${ext}`);
   },
 });
 
@@ -23,8 +22,8 @@ export const uploadRoomPictures = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const ok = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(
-      file.mimetype
+    const ok = ['image/jpeg', 'image/png', 'image/webp'].includes(
+      file.mimetype,
     );
     cb(ok ? null : new Error('Only image files are allowed'), ok);
   },

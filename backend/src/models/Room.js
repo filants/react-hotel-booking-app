@@ -70,8 +70,10 @@ const RoomSchema = new mongoose.Schema({
   },
 });
 
+// Index for faster category-based room filtering
 RoomSchema.index({ category: 1 });
 
+// Multikey index to optimize availability queries on embedded bookings
 RoomSchema.index({
   'bookings.checkIn': 1,
   'bookings.checkOut': 1,

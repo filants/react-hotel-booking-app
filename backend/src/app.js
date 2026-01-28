@@ -9,6 +9,8 @@ import roomCategoryRoute from './routes/roomCategory.route.js';
 
 const app = express();
 
+// CORS configuration to allow credentialed requests (cookies) from the frontend
+// Origin is restricted via environment variable for security
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,

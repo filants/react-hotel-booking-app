@@ -11,6 +11,7 @@ fs.mkdirSync(roomsUploadDir, { recursive: true });
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, roomsUploadDir),
+  // Generate unique filenames to avoid collisions when creating rooms and uploading images in the same request
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
     const base = path.basename(file.originalname, ext).replace(/\s+/g, '-');

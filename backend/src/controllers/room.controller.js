@@ -28,6 +28,9 @@ export const getAvailableRooms = async (req, res) => {
         return res.status(400).json({ error: 'Invalid checkIn/checkOut' });
       }
 
+      // Exclude rooms that have ANY booking overlapping the selected date range.
+      // Overlap rule: booking.checkIn < requestedCheckOut AND booking.checkOut > requestedCheckIn
+      // Using $not + $elemMatch ensures correct availability filtering before pagination.
       filter.bookings = {
         $not: {
           $elemMatch: {
@@ -39,6 +42,7 @@ export const getAvailableRooms = async (req, res) => {
     }
 
     const [availableRooms, count] = await Promise.all([
+      // Pagination is applied after availability filtering to ensure correct page count
       Room.find(filter).sort({ name: 1 }).skip(skip).limit(limit),
       Room.countDocuments(filter),
     ]);

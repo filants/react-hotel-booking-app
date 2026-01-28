@@ -3,6 +3,7 @@ import { mapUser } from '../helpers/index.js';
 
 const isProd = process.env.NODE_ENV === 'production';
 
+// Cookie configuration is environment-aware
 const cookieOptions = {
   httpOnly: true,
   secure: isProd,

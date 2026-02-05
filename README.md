@@ -1,7 +1,7 @@
 # Hotel Booking App
 
 A full-stack hotel booking application built as a diploma project.
-Users can browse available rooms by date/category, create bookings and manage reservations.
+Users can browse available rooms by date and category, create bookings, and manage reservations.
 Authentication is handled via JWT stored in HTTP-only cookies.
 
 ---
@@ -15,6 +15,7 @@ Authentication is handled via JWT stored in HTTP-only cookies.
 - Create and manage room bookings
 - Admin room creation and editing with image upload
 - Image upload with size/type validation
+- Global state management using Redux Toolkit
 - RESTful API architecture
 
 ---
@@ -24,9 +25,10 @@ Authentication is handled via JWT stored in HTTP-only cookies.
 ### Frontend
 
 - React (Vite)
+- Redux Toolkit (global state management)
+- React Redux
 - Axios
 - React Router
-- Context API
 
 ### Backend
 
@@ -41,6 +43,7 @@ Authentication is handled via JWT stored in HTTP-only cookies.
 ## Architecture Overview
 
 - **Frontend** communicates with the backend via a REST API
+- Global application state (authentication, rooms, reservations, pagination) is managed using Redux Toolkit
 - Authentication uses **JWT stored in HTTP-only cookies**
 - Availability filtering is performed **in MongoDB** to ensure correct pagination
 - Bookings are embedded inside Room documents for simpler availability queries

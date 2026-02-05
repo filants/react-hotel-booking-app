@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { createRoom, updateRoom } from '../../store/slices/roomsSlice';
 import { useRoom } from '../../hooks/useRoom';
-import { useRooms } from '../../hooks/useRooms';
 import { useRoomCategories } from '../../hooks/useRoomCategories';
 import {
 	Title,
@@ -16,8 +17,12 @@ import styled from 'styled-components';
 
 const AddRoomContainer = ({ className }) => {
 	const params = useParams();
-	const { room, loading: roomDataLoading } = useRoom(params.id);
-	const { createRoom, updateRoom, loading, error: apiError } = useRooms();
+	const { id: roomId } = params;
+
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const { room, loading: roomDataLoading } = useRoom(roomId);
+	const { loading, error: apiError } = useSelector((s) => s.rooms);
 	const { roomCategories } = useRoomCategories();
 	const [name, setName] = useState('');
 	const [category, setCategory] = useState('');
@@ -50,7 +55,7 @@ const AddRoomContainer = ({ className }) => {
 
 	const isEmpty = (value) => !String(value ?? '').trim();
 
-	const picturesMissing = params.id
+	const picturesMissing = roomId
 		? existingPictures.length === 0 && newPictures.length === 0
 		: newPictures.length === 0;
 
@@ -89,7 +94,7 @@ const AddRoomContainer = ({ className }) => {
 		setFormError(null);
 
 		if (hasMissing) {
-			setFormError('Please fill in all requires fields');
+			setFormError('Please fill in all required fields');
 			return;
 		}
 
@@ -103,34 +108,33 @@ const AddRoomContainer = ({ className }) => {
 			.map((item) => item.trim())
 			.filter(Boolean);
 
-		if (params.id) {
-			await updateRoom(
-				params.id,
-				{
-					name,
-					category,
-					size,
-					bed,
-					description,
-					view,
-					bathroomArray,
-					facilitiesArray,
-					keepPictures: existingPictures,
-				},
-				newPictures,
-			);
+		const formData = new FormData();
+		formData.append('name', name);
+		formData.append('category', category);
+		formData.append('size', size);
+		formData.append('bed', bed);
+		formData.append('description', description);
+		formData.append('view', view);
+
+		formData.append('bathroom', JSON.stringify(bathroomArray));
+		formData.append('facilities', JSON.stringify(facilitiesArray));
+
+		newPictures.forEach((file) => formData.append('pictures', file));
+
+		if (roomId) {
+			formData.append('keepPictures', JSON.stringify(existingPictures));
+
+			const action = await dispatch(updateRoom({ id: roomId, formData }));
+
+			if (updateRoom.fulfilled.match(action)) {
+				navigate(`/rooms/${roomId}`);
+			}
 		} else {
-			await createRoom(
-				name,
-				category,
-				size,
-				bed,
-				description,
-				view,
-				bathroomArray,
-				facilitiesArray,
-				newPictures,
-			);
+			const action = await dispatch(createRoom(formData));
+
+			if (createRoom.fulfilled.match(action)) {
+				navigate(`/rooms/${action.payload._id}`);
+			}
 		}
 	};
 
@@ -138,12 +142,12 @@ const AddRoomContainer = ({ className }) => {
 		if (formError) window.scrollTo({ top: 0, behavior: 'smooth' });
 	}, [formError]);
 
-	if (params.id && roomDataLoading) return <Loader />;
+	if (roomId && roomDataLoading) return <Loader />;
 
 	return (
 		<div className={className}>
 			<FullPageContainer>
-				<Title>{params.id ? 'Edit' : 'Add'} hotel room</Title>
+				<Title>{roomId ? 'Edit' : 'Add'} hotel room</Title>
 				<form onSubmit={handleSubmit} noValidate>
 					{formError && <FormResponse type="error">{formError}</FormResponse>}
 					{apiError && <FormResponse type="error">{apiError}</FormResponse>}
@@ -230,7 +234,7 @@ const AddRoomContainer = ({ className }) => {
 						type="file"
 						name="pictures"
 						onChange={handlePicturesChange}
-						accept="image/jpeg, image/jpg"
+						accept="image/jpeg, image/png, image/webp"
 						isRequired
 						error={submitted && missing.pictures ? 'Select a file' : null}
 					>
@@ -260,7 +264,7 @@ const AddRoomContainer = ({ className }) => {
 
 					{newPictures.length > 0 && (
 						<div className="pictures-list">
-							<strong>{params.id && 'New pictures'}</strong>
+							<strong>{roomId && 'New pictures'}</strong>
 							{newPictures.map((file, idx) => (
 								<div key={`${file.name}-${idx}`}>
 									<span>{file.name}</span>
@@ -279,7 +283,6 @@ const AddRoomContainer = ({ className }) => {
 						</div>
 					)}
 					<Button
-						type="submit"
 						className="primary"
 						clickEvent={handleSubmit}
 						disabled={loading}

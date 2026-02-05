@@ -1,4 +1,9 @@
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	fetchAvailableRooms,
+	setPage as setRoomsPage,
+} from '../../store/slices/roomsSlice';
 import {
 	Title,
 	FullPageContainer,
@@ -7,17 +12,17 @@ import {
 	Loader,
 	EmptyPageMessage,
 } from '../../components';
-import { useRooms } from '../../hooks/useRooms';
 import { formattedDate } from '../../helpers';
 
 export const Occupancy = () => {
-	const { getAvailableRooms, loading, setPage, page, lastPage, rooms, error } =
-		useRooms();
+	const dispatch = useDispatch();
+	const { rooms, page, lastPage, loading, error } = useSelector((s) => s.rooms);
+	const setPage = (newPage) => dispatch(setRoomsPage(newPage));
 
 	const roomsArray = Array.isArray(rooms) ? rooms : [];
 
 	useEffect(() => {
-		getAvailableRooms({ page });
+		dispatch(fetchAvailableRooms({ page }));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [page]);
 

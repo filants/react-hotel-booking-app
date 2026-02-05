@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, clearApiError } from '../../store/slices/authSlice';
+import { roles } from '../../constants/roles';
 import { Title, Input, Button, FormResponse } from '../../components';
 import styled from 'styled-components';
 
 const LoginContainer = ({ className }) => {
-	const { apiError, clearApiError, authLoading, login } = useAuth();
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const { apiError, authLoading } = useSelector((s) => s.auth);
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -47,13 +51,17 @@ const LoginContainer = ({ className }) => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
-		clearApiError();
+		dispatch(clearApiError());
 
 		const isValid = validateAll();
 		if (!isValid) return;
 
-		await login(email, password);
+		const action = await dispatch(login({ email, password }));
+
+		if (login.fulfilled.match(action)) {
+			const user = action.payload;
+			navigate(user.role === roles.ADMIN ? '/admin' : '/reservations');
+		}
 	};
 
 	// HANDLERS
@@ -63,7 +71,7 @@ const LoginContainer = ({ className }) => {
 		if (errors.email) {
 			setErrors((prev) => ({ ...prev, email: '' }));
 		}
-		if (apiError) clearApiError();
+		if (apiError) dispatch(clearApiError());
 	};
 
 	const handlePasswordChange = ({ target }) => {
@@ -71,7 +79,7 @@ const LoginContainer = ({ className }) => {
 		if (errors.password) {
 			setErrors((prev) => ({ ...prev, password: '' }));
 		}
-		if (apiError) clearApiError();
+		if (apiError) dispatch(clearApiError());
 	};
 
 	return (

@@ -1,4 +1,5 @@
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { useRoom } from '../../hooks/useRoom';
 import {
 	Title,
@@ -7,7 +8,6 @@ import {
 	BookButton,
 	FullPageContainer,
 } from '../../components';
-import { useAuth } from '../../contexts/AuthContext';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper/modules';
 import 'swiper/css';
@@ -19,7 +19,7 @@ import { roles } from '../../constants/roles';
 const RoomContainer = ({ className }) => {
 	const params = useParams();
 	const navigate = useNavigate();
-	const { user } = useAuth();
+	const { user } = useSelector((s) => s.auth);
 	const { addBooking, room, loading, error } = useRoom(params.id);
 	const { state } = useLocation();
 	const { checkIn, checkOut, adults, roomCategory, roomCategoryLabel, variant } =

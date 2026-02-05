@@ -1,4 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	deleteReservation,
+	fetchReservations,
+	setReservationsPage,
+} from '../../store/slices/reservationsSlice';
 import {
 	Title,
 	EmptyPageMessage,
@@ -7,19 +13,26 @@ import {
 	FullPageContainer,
 	Pagination,
 } from '../../components';
-import { useReservations } from '../../hooks/useReservations';
 import styled from 'styled-components';
 
 const ReservationsContainer = ({ className }) => {
-	const { reservations, page, lastPage, setPage, deleteReservation, error, loading } =
-		useReservations();
+	const dispatch = useDispatch();
+	const { reservations, page, lastPage, loading, error } = useSelector(
+		(s) => s.reservations,
+	);
 	const [deletingId, setDeletingId] = useState(null);
+
+	useEffect(() => {
+		dispatch(fetchReservations(page));
+	}, [dispatch, page]);
 
 	const handleDelete = async (reservationId) => {
 		setDeletingId(reservationId);
-		await deleteReservation(reservationId);
+		await dispatch(deleteReservation({ reservationId, page }));
 		setDeletingId(null);
 	};
+
+	const setPage = (newPage) => dispatch(setReservationsPage(newPage));
 
 	if (error) return <EmptyPageMessage>{error}</EmptyPageMessage>;
 

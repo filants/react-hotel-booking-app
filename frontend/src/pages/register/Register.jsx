@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import validator from 'validator';
-import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearApiError, register } from '../../store/slices/authSlice';
 import { Title, Input, Button, FormResponse } from '../../components';
 import styled from 'styled-components';
 
 const RegisterContainer = ({ className }) => {
-	const { apiError, clearApiError, authLoading, register } = useAuth();
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const { apiError, authLoading } = useSelector((s) => s.auth);
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -82,12 +86,16 @@ const RegisterContainer = ({ className }) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		clearApiError();
+		dispatch(clearApiError());
 
 		const isValid = validateAll();
 		if (!isValid) return;
 
-		await register(email, password);
+		const action = await dispatch(register({ email, password }));
+
+		if (register.fulfilled.match(action)) {
+			navigate('/');
+		}
 	};
 
 	// HANDLERS
@@ -97,7 +105,7 @@ const RegisterContainer = ({ className }) => {
 		if (errors.email) {
 			setErrors((prev) => ({ ...prev, email: '' }));
 		}
-		if (apiError) clearApiError();
+		if (apiError) dispatch(clearApiError());
 	};
 
 	const handlePasswordChange = ({ target }) => {
@@ -105,7 +113,7 @@ const RegisterContainer = ({ className }) => {
 		if (errors.password) {
 			setErrors((prev) => ({ ...prev, password: '' }));
 		}
-		if (apiError) clearApiError();
+		if (apiError) dispatch(clearApiError());
 	};
 
 	const handleRepeatPasswordChange = ({ target }) => {
@@ -113,7 +121,7 @@ const RegisterContainer = ({ className }) => {
 		if (errors.repeatPassword) {
 			setErrors((prev) => ({ ...prev, repeatPassword: '' }));
 		}
-		if (apiError) clearApiError();
+		if (apiError) dispatch(clearApiError());
 	};
 
 	return (

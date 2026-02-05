@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	fetchAvailableRooms,
+	setPage as setRoomsPage,
+	setRooms as setRoomsArray,
+} from '../../store/slices/roomsSlice';
 import {
 	Loader,
 	Card,
@@ -9,7 +15,6 @@ import {
 	FullPageContainer,
 	Pagination,
 } from '../../components';
-import { useRooms } from '../../hooks/useRooms';
 import { useRoomCategories } from '../../hooks/useRoomCategories';
 import { getDate } from '../../helpers';
 import styled from 'styled-components';
@@ -17,10 +22,14 @@ import styled from 'styled-components';
 const HomeContainer = ({ className }) => {
 	const location = useLocation();
 	const preset = location.state;
+	const dispatch = useDispatch();
 
 	const { todayDate, tomorrowDate } = getDate();
-	const { getAvailableRooms, rooms, page, lastPage, setPage, setRooms, loading } =
-		useRooms();
+
+	const { rooms, page, lastPage, loading } = useSelector((s) => s.rooms);
+	const setPage = (newPage) => dispatch(setRoomsPage(newPage));
+	const setRooms = (rooms) => dispatch(setRoomsArray(rooms));
+
 	const { roomCategories } = useRoomCategories();
 
 	const [checkIn, setCheckIn] = useState(todayDate);
@@ -37,28 +46,31 @@ const HomeContainer = ({ className }) => {
 		setCheckOut(preset.checkOut);
 		setAdults(preset.adults);
 		setRoomCategory(preset.roomCategory);
+
 		setPage(1);
-		getAvailableRooms({
-			roomCategory: preset.roomCategory,
-			checkIn: preset.checkIn,
-			checkOut: preset.checkOut,
-			page: 1,
-		});
+		dispatch(
+			fetchAvailableRooms({
+				roomCategory: preset.roomCategory,
+				checkIn: preset.checkIn,
+				checkOut: preset.checkOut,
+				page: 1,
+			}),
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [preset, setRooms, setPage]);
+	}, [dispatch, preset]);
 
 	useEffect(() => {
 		if (rooms === null) return;
 
-		getAvailableRooms({ roomCategory, checkIn, checkOut, page });
+		dispatch(fetchAvailableRooms({ roomCategory, checkIn, checkOut, page }));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [page]);
+	}, [dispatch, page]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setRooms([]);
 		setPage(1);
-		await getAvailableRooms({ roomCategory, checkIn, checkOut, page: 1 });
+		await dispatch(fetchAvailableRooms({ roomCategory, checkIn, checkOut, page: 1 }));
 	};
 
 	const roomsList = rooms ?? [];

@@ -1,9 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useSelector } from 'react-redux';
 import { roles } from '../../constants/roles';
 
 export const AdminRoute = () => {
-	const { user, loadingUser } = useAuth();
+	const { user, loadingUser } = useSelector((s) => s.auth);
 
 	if (loadingUser) return null;
 

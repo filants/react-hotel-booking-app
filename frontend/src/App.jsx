@@ -1,4 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchMe } from './store/slices/authSlice';
 import {
 	Home,
 	Register,
@@ -10,13 +13,19 @@ import {
 	AdminDashboard,
 	AddRoom,
 } from './pages';
-import { AdminRoute, EmptyPageMessage, Header, ProtectedRoute } from './components';
-import styled from 'styled-components';
+import { AdminRoute, Header, ProtectedRoute } from './components';
 import { errors } from './constants/errors';
+import styled from 'styled-components';
 
 const Content = styled.div``;
 
 export const App = () => {
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(fetchMe());
+	}, [dispatch]);
+
 	return (
 		<>
 			<Header />

@@ -1,17 +1,21 @@
-import { useAuth } from '../../../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../../../store/slices/authSlice';
 import { UserPanel } from './components/UserPanel';
+import styled from 'styled-components';
 
 const NavContainer = ({ className }) => {
-	const { user, logout, loadingUser } = useAuth();
+	const dispatch = useDispatch();
+	const { user, loadingUser } = useSelector((s) => s.auth);
+
+	const handleLogout = () => dispatch(logout());
 
 	return (
 		<nav className={className}>
 			{loadingUser ? (
 				<span>Loading...</span>
 			) : user ? (
-				<UserPanel user={user} logout={logout} />
+				<UserPanel user={user} logout={handleLogout} />
 			) : (
 				<>
 					<Link to="/login">Sign In</Link>

@@ -1,16 +1,22 @@
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { resetRoomsState } from '../../store/slices/roomsSlice';
 import { Nav } from './components';
 import Logo from './assets/courtyard-by-marriott-logo.svg?react';
 import styled from 'styled-components';
 
-const HeaderContainer = ({ className }) => (
-	<header className={className}>
-		<Link to="/">
-			<Logo width={250} alt="Courtyard by Marriott Logo" />
-		</Link>
-		<Nav />
-	</header>
-);
+const HeaderContainer = ({ className }) => {
+	const dispatch = useDispatch();
+
+	return (
+		<header className={className}>
+			<Link to="/" onClick={() => dispatch(resetRoomsState())}>
+				<Logo width={250} alt="Courtyard by Marriott Logo" />
+			</Link>
+			<Nav />
+		</header>
+	);
+};
 
 export const Header = styled(HeaderContainer)`
 	height: 100px;

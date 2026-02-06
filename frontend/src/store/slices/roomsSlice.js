@@ -60,8 +60,20 @@ const roomsSlice = createSlice({
 		lastPage: null,
 		loading: false,
 		error: null,
+		query: null,
 	},
 	reducers: {
+		setQuery: (state, action) => {
+			state.query = action.payload;
+		},
+		resetRoomsState: (state) => {
+			state.rooms = null;
+			state.page = 1;
+			state.lastPage = 1;
+			state.loading = false;
+			state.error = null;
+			state.query = null;
+		},
 		setPage: (state, action) => {
 			state.page = action.payload;
 		},
@@ -116,5 +128,5 @@ const roomsSlice = createSlice({
 	},
 });
 
-export const { setPage, setRooms } = roomsSlice.actions;
+export const { resetRoomsState, setPage, setQuery, setRooms } = roomsSlice.actions;
 export default roomsSlice.reducer;

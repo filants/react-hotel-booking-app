@@ -29,7 +29,7 @@ export const deleteReservation = createAsyncThunk(
 		try {
 			await deleteReservationApi(reservationId);
 			// refresh list after delete
-			thunkApi.dispatch(fetchReservations(page));
+			await thunkApi.dispatch(fetchReservations(page));
 			return true;
 		} catch (error) {
 			return thunkApi.rejectWithValue(
@@ -46,6 +46,7 @@ const reservationsSlice = createSlice({
 		page: 1,
 		lastPage: null,
 		loading: false,
+		deleteLoading: false,
 		error: null,
 	},
 	reducers: {
@@ -72,14 +73,14 @@ const reservationsSlice = createSlice({
 			})
 
 			.addCase(deleteReservation.pending, (state) => {
-				state.loading = true;
+				state.deleteLoading = true;
 				state.error = null;
 			})
 			.addCase(deleteReservation.fulfilled, (state) => {
-				state.loading = false;
+				state.deleteLoading = false;
 			})
 			.addCase(deleteReservation.rejected, (state, action) => {
-				state.loading = false;
+				state.deleteLoading = false;
 				state.error = action.payload || 'failed to delete reservation';
 			});
 	},

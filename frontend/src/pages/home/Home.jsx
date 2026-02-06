@@ -5,6 +5,7 @@ import {
 	fetchAvailableRooms,
 	setPage as setRoomsPage,
 	setRooms as setRoomsArray,
+	setQuery as setSearchQuery,
 } from '../../store/slices/roomsSlice';
 import {
 	Loader,
@@ -26,9 +27,10 @@ const HomeContainer = ({ className }) => {
 
 	const { todayDate, tomorrowDate } = getDate();
 
-	const { rooms, page, lastPage, loading } = useSelector((s) => s.rooms);
+	const { lastPage, loading, query, rooms, page } = useSelector((s) => s.rooms);
 	const setPage = (newPage) => dispatch(setRoomsPage(newPage));
 	const setRooms = (rooms) => dispatch(setRoomsArray(rooms));
+	const setQuery = (query) => dispatch(setSearchQuery(query));
 
 	const { roomCategories } = useRoomCategories();
 
@@ -39,38 +41,37 @@ const HomeContainer = ({ className }) => {
 	const [roomCategory, setRoomCategory] = useState('all');
 
 	useEffect(() => {
+		if (!query) return;
+
+		setRoomCategory(query.roomCategory);
+		setCheckIn(query.checkIn);
+		setCheckOut(query.checkOut);
+	}, [query]);
+
+	useEffect(() => {
 		if (!preset) return;
 
 		setRooms([]);
-		setCheckIn(preset.checkIn);
-		setCheckOut(preset.checkOut);
-		setAdults(preset.adults);
-		setRoomCategory(preset.roomCategory);
-
 		setPage(1);
-		dispatch(
-			fetchAvailableRooms({
-				roomCategory: preset.roomCategory,
-				checkIn: preset.checkIn,
-				checkOut: preset.checkOut,
-				page: 1,
-			}),
-		);
+		setQuery({
+			roomCategory: preset.roomCategory,
+			checkIn: preset.checkIn,
+			checkOut: preset.checkOut,
+			adults: preset.adults,
+		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dispatch, preset]);
 
 	useEffect(() => {
-		if (rooms === null) return;
-
-		dispatch(fetchAvailableRooms({ roomCategory, checkIn, checkOut, page }));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [dispatch, page]);
+		if (!query) return;
+		dispatch(fetchAvailableRooms({ ...query, page }));
+	}, [dispatch, query, page]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		setRooms([]);
+		setQuery({ roomCategory, checkIn, checkOut, adults });
 		setPage(1);
-		await dispatch(fetchAvailableRooms({ roomCategory, checkIn, checkOut, page: 1 }));
+		setRooms([]);
 	};
 
 	const roomsList = rooms ?? [];
@@ -103,6 +104,7 @@ const HomeContainer = ({ className }) => {
 						clickEvent={() => {
 							setRooms(null); // back to search screen
 							setPage(1);
+							setQuery(null);
 						}}
 						checkIn={checkIn}
 						checkOut={checkOut}

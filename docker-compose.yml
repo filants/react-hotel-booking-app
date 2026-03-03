@@ -4,7 +4,7 @@ services:
     env_file:
       - ./backend/.env
     volumes:
-      - ./uploads:/app/uploads
+      - ./backend/uploads:/app/uploads
     restart: unless-stopped
 
   frontend:
